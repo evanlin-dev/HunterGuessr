@@ -1,0 +1,22 @@
+{
+  "name": "hunterguessr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evanlin-dev/HunterGuessr.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/evanlin-dev/HunterGuessr/issues"
+  },
+  "homepage": "https://github.com/evanlin-dev/HunterGuessr#readme",
+  "devDependencies": {
+    "electron": "^32.0.2"
+  }
+}
