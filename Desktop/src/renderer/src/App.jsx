@@ -1,10 +1,9 @@
 import React from "react";
 import { MarkersPlugin } from "@photo-sphere-viewer/markers-plugin";
 import { ReactPhotoSphereViewer } from "react-photo-sphere-viewer";
-import { LensflarePlugin } from "photo-sphere-viewer-lensflare-plugin";
 import "@photo-sphere-viewer/markers-plugin/index.css";
 import pinRed from './assets/pin-red.png';
-import panoImage from './assets/sciencecenter.png';
+import panoImage from './assets/Test_Pano.jpg';
 
 function App() {
   const photoSphereRef = React.useRef();
@@ -35,20 +34,7 @@ function App() {
           },
         ],
       },
-    ],
-    [
-      LensflarePlugin,
-      {
-        // list of lensflares
-        lensflares: [
-          {
-            id: "sun",
-            position: { yaw: "145deg", pitch: "2deg" },
-            type: 0,
-          },
-        ],
-      },
-    ],
+    ]
   ];
 
   return (
@@ -56,8 +42,8 @@ function App() {
       <ReactPhotoSphereViewer
         ref={photoSphereRef}
         src={panoImage}
-        // defaultZoomLvl={0}
-        littlePlanet={true}
+        defaultZoomLvl={0}
+        // littlePlanet={true}
         lang={{
           littlePlanetButton: "Little Planet",
         }}
