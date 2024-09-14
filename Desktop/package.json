@@ -24,6 +24,7 @@
     "@photo-sphere-viewer/markers-plugin": "^5.10.0",
     "electron-updater": "^6.1.7",
     "photo-sphere-viewer-lensflare-plugin": "^2.1.2",
+    "react-pannellum": "^0.2.16",
     "react-photo-sphere-viewer": "^6.0.0"
   },
   "devDependencies": {
