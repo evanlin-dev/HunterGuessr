@@ -10,11 +10,12 @@ class App extends React.Component {
   render() {
     const config = {
       // autoRotate: -2,
+      autoLoad: true,
     };
 
     const equirectangularOptions = {
       haov: 360,
-      vaov: 90, 
+      vaov: 70, 
     }
 
     return (
