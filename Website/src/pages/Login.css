@@ -3,13 +3,11 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
-    background: url('./../assets/HunterCoverPicture.png') no-repeat center center fixed;
+    background: url('../assets/images/HunterCoverPicture.png') no-repeat center center fixed;
     background-size: cover;
 }
 
 .login-container {
-    height: 100vh;
-    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,8 +41,7 @@ body {
     padding: 10px;
     background-color: #5c524e;
     border: none;
-    color: white;
-    border-radius: 5px;
+    color: rgb(10, 8, 8);
     cursor: pointer;
 }
 
@@ -52,6 +49,11 @@ body {
     background-color: #3e3a36;
 }
 
-h1{
+h1, p{
+    color: black;
+}
+
+input{
+    background-color: white;
     color: black;
 }

@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth'; 
+// src/pages/SignUp.jsx
+import React, { useState } from "react";
+import { Link } from "react-router-dom"; 
 import { auth } from '../firebase'; 
-import './Login.css';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import './SignUp.css';
 
-const Login = () => {
-  const [email, setEmail] = useState(''); 
+const SignUp = () => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert('Login successful!');
-      navigate('/HunterGuessr/Pano'); 
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert('Account created successfully!');
     } catch (error) {
       console.error(error);
       alert(error.message);
@@ -22,8 +21,8 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
+    <div className="background">
+      <div className="signup-container">
         <h1>Hunter Guesser</h1>
         <form onSubmit={handleSubmit}>
           <input 
@@ -40,14 +39,14 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)} 
             required 
           />
-          <button type="submit">Login</button>
-          <p>
-            Don't have an account? <Link to="/HunterGuessr/signup">Sign up</Link>
-          </p>
+          <button type="submit">Sign Up</button>
         </form>
+        <p>
+          Already Have an Account? <Link to="/HunterGuessr/">Login</Link>
+        </p>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default SignUp;
