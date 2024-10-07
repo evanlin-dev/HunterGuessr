@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp.jsx'
 import { createBrowserRouter , RouterProvider} from 'react-router-dom'
 import './index.css'
 
+
 const BrowserRouter = createBrowserRouter([
   {
     path: 'HunterGuessr/',
