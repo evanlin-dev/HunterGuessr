@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactPannellum, { addScene, getConfig, loadScene } from "react-pannellum";
 import axios from 'axios';
+import './Pano.css'
 
 const Pano = () => {
     const [sceneId, setSceneId] = useState(0);
@@ -92,6 +93,17 @@ const Pano = () => {
             <div>
                 {/* <button onClick={fetchAllImages}>Retrieve All Images</button> */}
                 <button onClick={fetchRandomImage}>Get Random Image</button>
+            </div>
+
+            <div className='scoreboard'>
+                <div className='score'>
+                    <h3>Round</h3>
+                    <p className='scoreboard_text'>1</p>
+                </div>
+                <div className='score'>
+                    <h3>Score</h3>
+                    <p className='scoreboard_text'>540</p>
+                </div>
             </div>
 
             <select onChange={handleImageChange} value={selectedImage}>

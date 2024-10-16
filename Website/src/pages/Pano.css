@@ -1,0 +1,22 @@
+.scoreboard {
+    position: absolute;
+    background-color: #D9D9D9;
+    top: 13%;
+    left: 70%;
+    z-index: 1;
+    padding: 25px;
+    border-radius: 25px;
+    height: 3%;
+    width: 15%;
+    display: flex;
+    column-gap: 30%;
+    row-gap: 0%;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+.scoreboard_text, h3{
+    color: black;
+    margin: 0;
+}
+
