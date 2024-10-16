@@ -14,7 +14,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       alert('Login successful!');
-      navigate('/HunterGuessr/Pano'); 
+      navigate('/Pano'); 
     } catch (error) {
       console.error(error);
       alert(error.message);
@@ -42,7 +42,7 @@ const Login = () => {
           />
           <button type="submit">Login</button>
           <p>
-            Don't have an account? <Link to="/HunterGuessr/signup">Sign up</Link>
+            Don't have an account? <Link to="/signup">Sign up</Link>
           </p>
         </form>
       </div>

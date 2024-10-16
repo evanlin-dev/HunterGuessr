@@ -8,23 +8,8 @@ import SignUp from './pages/SignUp.jsx'
 import { createBrowserRouter , RouterProvider} from 'react-router-dom'
 import './index.css'
 
-const BrowserRouter = createBrowserRouter([
-  {
-    path: 'HunterGuessr/',
-    element: <Login />
-  },
-  {
-    path: '/HunterGuessr/Pano',
-    element: <Pano />
-  },
-  {
-    path: '/HunterGuessr/signup',
-    element: <SignUp /> 
-  }
-]);
-
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-   <RouterProvider router = {BrowserRouter}></RouterProvider>
+   <App/>
   </StrictMode>
 )
