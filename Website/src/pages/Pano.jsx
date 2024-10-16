@@ -96,16 +96,16 @@ const Pano = () => {
                 <button onClick={fetchRandomImage}>Get Random Image</button>
             </div>
 
-            <div className='scoreboard'>
+            <div className='scoreCounter'>
                 <div className='score'>
                     <h3>Round</h3>
-                    <p className='scoreboard_text'>1</p>
+                    <p className='scoreCounter_text'>1</p>
                 {/* logic will be implemented */}
 
                 </div>
                 <div className='score'>
                     <h3>Score</h3>
-                    <p className='scoreboard_text'>540</p>
+                    <p className='scoreCounter_text'>540</p>
                     {/* logic to calculate score will be implemented once user input is set*/}
                 </div>
             </div>
