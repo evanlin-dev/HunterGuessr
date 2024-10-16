@@ -7,8 +7,8 @@ import { Routes, Route } from 'react-router-dom'
 function App() {
   return (
    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/signup" element={<Pano />} />
+      <Route path="/HunterGuessr" element={<Login />} />
+      <Route path="/HunterGuessr/signup" element={<Pano />} />
    </Routes>
   )
 }
