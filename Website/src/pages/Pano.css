@@ -1,7 +1,7 @@
 .scoreboard {
     position: absolute;
     background-color: #D9D9D9;
-    top: 13%;
+    top: 14%;
     left: 70%;
     z-index: 1;
     padding: 25px;
@@ -18,5 +18,17 @@
 .scoreboard_text, h3{
     color: black;
     margin: 0;
+}
+
+.floorplan{
+    position: absolute;
+    background-color: #D9D9D9;
+    left: 60%;
+    top: 50%;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
 }
 

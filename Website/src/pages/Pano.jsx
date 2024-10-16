@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactPannellum, { addScene, getConfig, loadScene } from "react-pannellum";
 import axios from 'axios';
 import './Pano.css'
+import floorPlan from '../assets/images/floorplan7.png';
 
 const Pano = () => {
     const [sceneId, setSceneId] = useState(0);
@@ -99,10 +100,13 @@ const Pano = () => {
                 <div className='score'>
                     <h3>Round</h3>
                     <p className='scoreboard_text'>1</p>
+                {/* logic will be implemented */}
+
                 </div>
                 <div className='score'>
                     <h3>Score</h3>
                     <p className='scoreboard_text'>540</p>
+                    {/* logic to calculate score will be implemented once user input is set*/}
                 </div>
             </div>
 
@@ -124,8 +128,10 @@ const Pano = () => {
                 config={config}
                 equirectangularOptions={equirectangularOptions}
             />
-
-            <div onClick={click}>Click me</div>
+            <div className='floorplan'>
+            <img src={floorPlan} alt="Floor Plan" height="300px" width="400px" />
+            {/* logic to pull floorplan will be implemented later on*/}
+            </div>
         </div>
     );
 };
