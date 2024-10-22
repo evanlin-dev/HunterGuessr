@@ -1,0 +1,35 @@
+.stats-page {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.stats-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    gap: 20px;
+}
+
+.stats-container,
+.summary-container {
+    width: 48%;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container {
+    margin: 40px 0;
+}
+
+h2,
+h3 {
+    text-align: center;
+    color: black;
+}
+
+.summary-container {
+    background-color: #e6e6e6;
+}
