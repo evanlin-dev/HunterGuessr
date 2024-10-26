@@ -1,34 +1,126 @@
+.container {
+    position: relative;
+    margin-top: 3em;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.getRandomImageButton {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #60269e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.getRandomImageButton:hover {
+    background-color: #4b1e7a;
+}
+
 .scoreCounter {
     position: absolute;
-    background-color: #D9D9D9;
-    top: 14%;
-    left: 70%;
-    z-index: 1;
-    padding: 25px;
-    border-radius: 25px;
-    height: 3%;
-    width: 15%;
+    background-color: rgba(217, 217, 217, 0.8);
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    padding: 15px;
+    border-radius: 10px;
     display: flex;
-    column-gap: 30%;
-    row-gap: 0%;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    gap: 10px;
     color: black;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
-.scoreCounter_text, h3{
+
+.score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scoreCounter_text,
+h3 {
     color: black;
     margin: 0;
+    font-size: 1rem;
 }
 
-.floorplan{
+.imageSelector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.imageSelector select {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}
+
+.imageSelector select:focus {
+    outline: none;
+    border-color: #60269e;
+}
+
+.panoramaContainer {
+    position: relative;
+    width: 80vw;
+    height: 80vh;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.toggleFloorplanButton {
     position: absolute;
-    background-color: #D9D9D9;
-    left: 60%;
-    top: 50%;
-    z-index: 1;
+    bottom: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    background-color: rgba(96, 38, 158, 0.8);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.toggleFloorplanButton:hover {
+    background-color: rgba(75, 30, 122, 0.8);
+}
+
+.floorplan {
+    position: absolute;
+    background-color: rgba(217, 217, 217, 0.8);
+    bottom: 10px;
+    right: 10px;
+    z-index: 2;
     display: flex;
     justify-content: center;
     align-items: center;
     color: black;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+.floorplan img {
+    position: relative;
+}
+
+.floorplan img+img {
+    position: absolute;
+}

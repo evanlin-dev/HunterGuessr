@@ -1,5 +1,4 @@
 import './Stats.css';
-import NavBar from '../components/NavBar';
 import { Pie, Bar, Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -98,8 +97,7 @@ const Stats = () => {
   };
 
   return (
-    <div>
-      <NavBar />
+    <div className='container'>
       <div className="stats-page">
         <div className="stats-wrapper">
           <div className="stats-container">

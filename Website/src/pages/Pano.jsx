@@ -125,7 +125,7 @@ const Pano = () => {
     }, []);
 
     return (
-        <div>
+        <div className='container'>
             <div>
                 {/* <button onClick={fetchAllImages}>Retrieve All Images</button> */}
                 <button onClick={fetchRandomImage}>Get Random Image</button>
@@ -174,10 +174,10 @@ const Pano = () => {
                             position: 'absolute',
                             top: `${userLocation.y}%`,
                             left: `${userLocation.x}%`,
-                            transform: 'translate(-50%, -100%)', // Center the icon on the click
-                            width: '30px', // Size of pinpoint icon
+                            transform: 'translate(-50%, -100%)',
+                            width: '30px',
                             height: '30px',
-                            pointerEvents: 'none', // Ensure the icon doesn't block further clicks
+                            pointerEvents: 'none',
                         }}
                     />
                 )}
