@@ -1,9 +1,11 @@
-.container {
-    position: relative;
-    margin-top: 3em;
+.page-container {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100vh;
+    height: 93%;
     overflow: hidden;
+    margin-top: 4em;
 }
 
 .controls {
@@ -29,8 +31,8 @@
 .scoreCounter {
     position: absolute;
     background-color: rgba(217, 217, 217, 1);
-    top: 5em;
-    right: 1em;
+    top: 2em;
+    right: 2em;
     z-index: 2;
     padding: 15px;
     border-radius: 10px;
@@ -86,7 +88,7 @@ h3 {
 }
 
 .toggleFloorplanButton {
-    margin-top: 0.5em; /* Space between the floorplan and the button */
+    margin-top: 0.5em;
     padding: 8px 12px;
     font-size: 0.9rem;
     background-color: rgba(96, 38, 158, 0.8);
@@ -103,8 +105,8 @@ h3 {
 
 .floorplan-container {
     position: absolute;
-    bottom: 9em;
-    right: 1em;
+    bottom: 2em;
+    right: 2em;
     z-index: 2;
     display: flex;
     flex-direction: column;
@@ -117,7 +119,6 @@ h3 {
 
 .floorplan {
     position: relative;
-    /* Optional: Add transitions for smooth hide/show */
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
@@ -129,7 +130,6 @@ h3 {
     position: absolute;
 }
 
-/* Optional: If implementing transitions */
 .floorplan.hidden {
     opacity: 0;
     visibility: hidden;

@@ -125,11 +125,10 @@ const Pano = () => {
     };
 
     return (
-        <div className='container'>
-            <div>
-                {/* <button onClick={fetchAllImages}>Retrieve All Images</button> */}
+        <div className='page-container'>
+            {/* <div>
                 <button onClick={fetchRandomImage}>Get Random Image</button>
-            </div>
+            </div> */}
 
             <div className='scoreCounter'>
                 <div className='score'>
@@ -142,20 +141,20 @@ const Pano = () => {
                 </div>
             </div>
 
-            <select onChange={handleImageChange} value={selectedImage}>
+            {/* <select onChange={handleImageChange} value={selectedImage}>
                 <option value="" disabled>Select an image</option>
                 {images.map((image) => (
                     <option key={image.src} value={image.src}>
                         {image.name}
                     </option>
                 ))}
-            </select>
+            </select> */}
 
             <ReactPannellum
                 ref={pannellumRef}
                 id="1"
                 sceneId={`scene-${sceneId}`}
-                style={{ width: "80vw", height: "80vh" }}
+                style={{ width: "100%", height: "100%" }}
                 imageSource={selectedImage}
                 config={config}
                 equirectangularOptions={equirectangularOptions}
