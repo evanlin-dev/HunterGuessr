@@ -41,12 +41,14 @@ const Login = () => {
             required 
           />
           <button type="submit">Login</button>
+          <button type="leaderboard-button" onClick={() => navigate('/leaderboard')}>Check out the Leaderboard!</button>
           <p>
             Don't have an account? <Link to="/signup">Sign up</Link>
           </p>
         </form>
       </div>
     </div>
+
   );
 };
 
