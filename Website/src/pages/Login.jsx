@@ -21,34 +21,38 @@ const Login = () => {
     }
   };
 
-  return (
-    <div className="login-container">
-      <div className="login-box">
-        <h1>Hunter Guesser</h1>
-        <form onSubmit={handleSubmit}>
-          <input 
-            type="email" 
-            placeholder="Email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
-          <input 
-            type="password" 
-            placeholder="Password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
-          />
-          <button type="submit">Login</button>
-          <button type="leaderboard-button" onClick={() => navigate('/leaderboard')}>Check out the Leaderboard!</button>
-          <p>
-            Don't have an account? <Link to="/signup">Sign up</Link>
-          </p>
-        </form>
-      </div>
-    </div>
-
+    return (
+     <div className= "outer-container">
+        <div className="login-container">
+          <div className="login-box">
+            <h1>Hunter Guesser</h1>
+            <form onSubmit={handleSubmit}>
+              <input 
+                type="email" 
+                placeholder="Email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                required 
+              />
+              <input 
+                type="password" 
+                placeholder="Password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                required 
+              />
+              <button type="submit">Login</button>
+              <p>
+                Don't have an account? <Link to="/signup">Sign up</Link>
+              </p>
+            </form>
+              </div>
+            </div>
+        {/* <div className="login-container">*/}
+        <div className= "leaderboard-button">
+            <button type="leaderboard-button" onClick={() => navigate('/leaderboard')}>Check out the Leaderboard!</button>
+        </div>
+     </div>
   );
 };
 
