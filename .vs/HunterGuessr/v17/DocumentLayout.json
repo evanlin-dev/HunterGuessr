@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Website\\src\\pages\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Leaderboard.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Website\\src\\pages\\Leaderboard.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
@@ -15,12 +11,20 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Website\\src\\pages\\Leaderboard.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Website\\src\\pages\\Login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Pano.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Website\\src\\pages\\Pano.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Website\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Pano.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Website\\src\\pages\\Pano.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Website\\src\\pages\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Website\\src\\pages\\Login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,11 +34,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "Login.jsx",
               "DocumentMoniker": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Login.jsx",
               "RelativeDocumentMoniker": "Website\\src\\pages\\Login.jsx",
@@ -47,32 +51,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Leaderboard.css",
               "DocumentMoniker": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Leaderboard.css",
               "RelativeDocumentMoniker": "Website\\src\\pages\\Leaderboard.css",
               "ToolTip": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Leaderboard.css",
               "RelativeToolTip": "Website\\src\\pages\\Leaderboard.css",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2024-10-28T15:03:20.081Z",
               "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": ".gitignore",
-              "DocumentMoniker": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\.gitignore",
-              "RelativeDocumentMoniker": "Website\\.gitignore",
-              "ToolTip": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\.gitignore",
-              "RelativeToolTip": "Website\\.gitignore",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-10-28T04:24:19.408Z",
+              "DocumentIndex": 3,
+              "Title": "Pano.css",
+              "DocumentMoniker": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Pano.css",
+              "RelativeDocumentMoniker": "Website\\src\\pages\\Pano.css",
+              "ToolTip": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Pano.css",
+              "RelativeToolTip": "Website\\src\\pages\\Pano.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-10-29T15:01:58.453Z",
               "EditorCaption": ""
             }
           ]
@@ -83,20 +83,20 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Leaderboard.jsx",
               "DocumentMoniker": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Leaderboard.jsx",
               "RelativeDocumentMoniker": "Website\\src\\pages\\Leaderboard.jsx",
               "ToolTip": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Leaderboard.jsx",
               "RelativeToolTip": "Website\\src\\pages\\Leaderboard.jsx",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD4AAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABMAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
               "WhenOpened": "2024-10-28T15:03:23.207Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Login.css",
               "DocumentMoniker": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Login.css",
               "RelativeDocumentMoniker": "Website\\src\\pages\\Login.css",
@@ -104,7 +104,19 @@
               "RelativeToolTip": "Website\\src\\pages\\Login.css",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2024-10-28T15:12:59.942Z",
+              "WhenOpened": "2024-10-28T15:12:59.942Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Pano.jsx",
+              "DocumentMoniker": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Pano.jsx",
+              "RelativeDocumentMoniker": "Website\\src\\pages\\Pano.jsx",
+              "ToolTip": "C:\\Users\\termi\\OneDrive\\Documents\\GitHub\\HunterGuessr\\Website\\src\\pages\\Pano.jsx",
+              "RelativeToolTip": "Website\\src\\pages\\Pano.jsx",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAAAFYAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2024-10-29T15:01:52.925Z",
               "EditorCaption": ""
             }
           ]
