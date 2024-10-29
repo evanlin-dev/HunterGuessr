@@ -12,6 +12,8 @@ const Pano = () => {
     const [randomImage, setRandomImage] = useState(null);
     const pannellumRef = useRef();
 
+    const [elapsedTime, setElapsedTime] = useState(0); // State for elapsed time
+
     const originalLocation = ({x:50, y: 50});
     // this will be extracted from database for now we will have this
 
@@ -120,6 +122,27 @@ const Pano = () => {
         }
     };
 
+    // Timer logic
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setElapsedTime((prevTime) => prevTime + 1);
+        }, 1000); // Increment time every second
+
+        return () => clearInterval(timer); // Cleanup interval on component unmount
+    }, []);
+
+    // Format time in HH:MM:SS
+    const formatTime = (totalSeconds) => {
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = Math.floor(((totalSeconds % 3600) % 60));
+        if (hours == 0) {
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }else{
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+    };
+
     useEffect(() => {
         fetchAllImages();
     }, []);
@@ -143,6 +166,15 @@ const Pano = () => {
                     <p className='scoreCounter_text'>{score}</p>
                     {/* logic to calculate score will be implemented once user input is set*/}
                 </div>
+                <div>
+                    <h3>Time</h3>
+                    <p className='scoreCounter_text'>{formatTime(elapsedTime)}</p>
+                    {/* Display formatted time */}
+                </div>
+            </div>
+
+            <div className='log-out-button'>
+                <h3>Log Out</h3>
             </div>
 
             <select onChange={handleImageChange} value={selectedImage}>
