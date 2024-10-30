@@ -265,7 +265,6 @@ function Home() {
                     </Grid>
                 </Paper>
 
-                {/* Footer */}
                 <Box sx={{ backgroundColor: '#60269e', color: '#fff', py: 4, borderRadius: 4 }}>
                     <Typography variant="body2" align="center" color="white">
                         © {new Date().getFullYear()} HunterGuessr. All rights reserved.
