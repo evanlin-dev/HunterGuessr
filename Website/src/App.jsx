@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
-import Pano from "./pages/Pano";
+import Pano from './pages/Pano';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Stats from './pages/Stats';
 import Leaderboard from './pages/Leaderboard';
+import Settings from './pages/Settings';
+import Home from './pages/Home';
 import NavBar from './components/NavBar';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 function App() {
@@ -29,16 +31,24 @@ function App() {
     },
   });
 
+  const NavBarWrapper = () => {
+    const location = useLocation();
+    const hideNavPaths = ['/', '/signup'];
+    return !hideNavPaths.includes(location.pathname) ? <NavBar /> : null;
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <NavBar />
+        <NavBarWrapper />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/pano" element={<Pano />} />
           <Route path="/stats" element={<Stats />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>

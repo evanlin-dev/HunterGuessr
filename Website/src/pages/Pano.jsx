@@ -17,6 +17,14 @@ const Pano = () => {
     const [score, setScore] = useState(0);
     const [isFloorplanVisible, setIsFloorplanVisible] = useState(true);
 
+    const [buildings, setBuildings] = useState([]);
+    const [floors, setFloors] = useState([]);
+    const [rooms, setRooms] = useState([]);
+
+    const [selectedBuilding, setSelectedBuilding] = useState('');
+    const [selectedFloor, setSelectedFloor] = useState('');
+    const [selectedRoom, setSelectedRoom] = useState('');
+
     const handleImageClick = (e) => {
         const imgElement = e.target;
         const canvas = imgElement.getBoundingClientRect();
@@ -58,7 +66,7 @@ const Pano = () => {
     const loadNewScene = () => {
         loadScene(`scene-${sceneId}`);
         setSceneId(sceneId + 1);
-    }
+    };
 
     const handleImageChange = (event) => {
         const newSelectedImage = event.target.value;
@@ -116,9 +124,42 @@ const Pano = () => {
         }
     };
 
+    const fetchLocationData = async () => {
+        setBuildings(['West Building', 'North Building', 'East Building', 'Thomas Hunter']);
+    };
+
     useEffect(() => {
         fetchAllImages();
+        fetchLocationData();
     }, []);
+
+    useEffect(() => {
+        if (selectedBuilding) {
+            setFloors(['Floor 1', 'Floor 2', 'Floor 3']);
+            setSelectedFloor('');
+            setSelectedRoom('');
+            setRooms([]);
+        }
+    }, [selectedBuilding]);
+
+    useEffect(() => {
+        if (selectedFloor) {
+            setRooms(['Room 101', 'Room 102', 'Room 103']);
+            setSelectedRoom('');
+        }
+    }, [selectedFloor]);
+
+    const handleBuildingChange = (e) => {
+        setSelectedBuilding(e.target.value);
+    };
+
+    const handleFloorChange = (e) => {
+        setSelectedFloor(e.target.value);
+    };
+
+    const handleRoomChange = (e) => {
+        setSelectedRoom(e.target.value);
+    };
 
     const toggleFloorplan = () => {
         setIsFloorplanVisible(prevState => !prevState);
@@ -126,9 +167,6 @@ const Pano = () => {
 
     return (
         <div className='page-container'>
-            {/* <div>
-                <button onClick={fetchRandomImage}>Get Random Image</button>
-            </div> */}
 
             <div className='scoreCounter'>
                 <div className='score'>
@@ -141,15 +179,6 @@ const Pano = () => {
                 </div>
             </div>
 
-            {/* <select onChange={handleImageChange} value={selectedImage}>
-                <option value="" disabled>Select an image</option>
-                {images.map((image) => (
-                    <option key={image.src} value={image.src}>
-                        {image.name}
-                    </option>
-                ))}
-            </select> */}
-
             <ReactPannellum
                 ref={pannellumRef}
                 id="1"
@@ -160,39 +189,63 @@ const Pano = () => {
                 equirectangularOptions={equirectangularOptions}
             />
 
-            {/* Floorplan and Toggle Button */}
-            <div className='floorplan-container'>
-                {isFloorplanVisible && (
-                    <div className='floorplan'>
-                        <img
-                            src={floorPlan}
-                            alt="Floor Plan"
-                            height="300px"
-                            width="400px"
-                            onClick={handleImageClick}
-                        />
-                        {/* Pinpoint Location */}
-                        {userLocation.x !== null && (
-                            <img
-                                src={pinpointLocation}
-                                alt="Pinpoint"
-                                style={{
-                                    position: 'absolute',
-                                    top: `${userLocation.y}%`,
-                                    left: `${userLocation.x}%`,
-                                    transform: 'translate(-50%, -100%)',
-                                    width: '30px',
-                                    height: '30px',
-                                    pointerEvents: 'none',
-                                }}
-                            />
-                        )}
-                    </div>
-                )}
+            <div className='bottom-right-container'>
+                <div className='dropdown-container'>
+                    <div className='dropdowns'>
+                        <select value={selectedBuilding} onChange={handleBuildingChange}>
+                            <option value="" disabled>Select Building</option>
+                            {buildings.map((building, index) => (
+                                <option key={index} value={building}>{building}</option>
+                            ))}
+                        </select>
 
-                <button className='toggleFloorplanButton' onClick={toggleFloorplan}>
-                    {isFloorplanVisible ? 'Hide Floorplan' : 'Show Floorplan'}
-                </button>
+                        <select value={selectedFloor} onChange={handleFloorChange} disabled={!selectedBuilding}>
+                            <option value="" disabled>Select Floor</option>
+                            {floors.map((floor, index) => (
+                                <option key={index} value={floor}>{floor}</option>
+                            ))}
+                        </select>
+
+                        <select value={selectedRoom} onChange={handleRoomChange} disabled={!selectedFloor}>
+                            <option value="" disabled>Select Room</option>
+                            {rooms.map((room, index) => (
+                                <option key={index} value={room}>{room}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                <div className='floorplan-container'>
+                    {isFloorplanVisible && (
+                        <div className='floorplan'>
+                            <img
+                                src={floorPlan}
+                                alt="Floor Plan"
+                                height="300px"
+                                width="400px"
+                                onClick={handleImageClick}
+                            />
+                            {userLocation.x !== null && (
+                                <img
+                                    src={pinpointLocation}
+                                    alt="Pinpoint"
+                                    style={{
+                                        position: 'absolute',
+                                        top: `${userLocation.y}%`,
+                                        left: `${userLocation.x}%`,
+                                        transform: 'translate(-50%, -100%)',
+                                        width: '30px',
+                                        height: '30px',
+                                        pointerEvents: 'none',
+                                    }}
+                                />
+                            )}
+                        </div>
+                    )}
+
+                    <button className='toggleFloorplanButton' onClick={toggleFloorplan}>
+                        {isFloorplanVisible ? 'Hide Floorplan' : 'Show Floorplan'}
+                    </button>
+                </div>
             </div>
         </div>
     );
