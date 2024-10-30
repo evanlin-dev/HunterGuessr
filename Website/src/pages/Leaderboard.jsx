@@ -1,17 +1,25 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-function Leaderboard() {
-  return (
-    <Box sx={{ padding: '2em', color: '#ffffff' }}>
-      <Typography variant="h4" gutterBottom>
-        Leaderboard Page
-      </Typography>
-      <Typography variant="body1">
-        This is the Leaderboard page.
-      </Typography>
-    </Box>
-  );
-}
+const Leaderboard = () => {
+    const [players, setPlayers] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Fetch leaderboard data
+        /*fetch('https://your-backend-url/api/leaderboard')
+            .then((response) => response.json())
+            .then((data) => setPlayers(data))
+            .catch((error) => console.error("Error fetching data:", error));
+            */
+    }, []);
+
+    return (
+        <div>
+            <h2>Leaderboard</h2>
+            <button type="main-page-button" onClick={() => navigate('/')}>Back to Main Page</button>
+        </div>
+    );
+};
 
 export default Leaderboard;
