@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ReactPannellum, { addScene, getConfig, loadScene } from "react-pannellum";
+import ReactPannellum, { addScene, loadScene } from "react-pannellum";
 import axios from 'axios';
 import './Pano.css';
 import floorPlan from '../assets/images/floorplan7.png';
@@ -8,7 +8,6 @@ import pinpointLocation from '../assets/images/PinpointLocation.png';
 const Pano = () => {
     const [sceneId, setSceneId] = useState(0);
     const [selectedImage, setSelectedImage] = useState('');
-    const [images, setImages] = useState([]);
     const [randomImage, setRandomImage] = useState(null);
     const pannellumRef = useRef();
 
@@ -24,6 +23,21 @@ const Pano = () => {
     const [selectedBuilding, setSelectedBuilding] = useState('');
     const [selectedFloor, setSelectedFloor] = useState('');
     const [selectedRoom, setSelectedRoom] = useState('');
+
+    const [usedImageIds, setUsedImageIds] = useState(new Set());
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+
+    const showModal = (message) => {
+        setModalMessage(message);
+        setIsModalVisible(true);
+    };
+
+    const hideModal = () => {
+        setIsModalVisible(false);
+        setModalMessage('');
+    };
 
     const handleImageClick = (e) => {
         const imgElement = e.target;
@@ -59,79 +73,64 @@ const Pano = () => {
         vaov: 90,
     };
 
-    const click = () => {
-        console.log(getConfig());
-    };
-
     const loadNewScene = () => {
         loadScene(`scene-${sceneId}`);
-        setSceneId(sceneId + 1);
-    };
-
-    const handleImageChange = (event) => {
-        const newSelectedImage = event.target.value;
-        setSelectedImage(newSelectedImage);
-
-        const img = new Image();
-        img.src = newSelectedImage;
-        img.onload = () => {
-            addScene(`scene-${sceneId}`, {
-                type: "equirectangular",
-                imageSource: newSelectedImage,
-                haov: equirectangularOptions.haov,
-                vaov: equirectangularOptions.vaov,
-                ...config
-            }, loadNewScene);
-        };
-    };
-
-    const fetchAllImages = async () => {
-        try {
-            const response = await axios.get('https://hunterguessr-6d520ba70010.herokuapp.com/retrieve_all_images');
-            const imagesData = response.data.map(image => ({
-                name: `Image ${image.id}`,
-                src: `data:image/jpeg;base64,${image.photo}`
-            }));
-            setImages(imagesData);
-        } catch (error) {
-            console.error('Error retrieving all images:', error);
-        }
+        setSceneId(prevId => prevId + 1);
     };
 
     const fetchRandomImage = async () => {
         try {
-            const response = await axios.get('https://hunterguessr-6d520ba70010.herokuapp.com/GrabImageForGuessing');
-            const randomImageData = {
-                name: `Random Image ${response.data.id}`,
-                src: `data:image/jpeg;base64,${response.data.photo}`
-            };
-            setRandomImage(randomImageData);
-            setSelectedImage(randomImageData.src);
+            if (usedImageIds.size >= 100) {
+                showModal('Maximum number of images reached.');
+                return;
+            }
 
-            const img = new Image();
-            img.src = randomImageData.src;
-            img.onload = () => {
-                addScene(`scene-${sceneId}`, {
-                    type: "equirectangular",
-                    imageSource: randomImageData.src,
-                    haov: equirectangularOptions.haov,
-                    vaov: equirectangularOptions.vaov,
-                    ...config
-                }, loadNewScene);
-            };
+            const response = await axios.get('https://hunterguessr-6d520ba70010.herokuapp.com/GrabImageForGuessing');
+            const image = response.data;
+
+            if (image && image.id && image.photo) {
+                if (usedImageIds.has(image.id)) {
+                    console.log('Image already used');
+                    showModal("You've gone through all the images. Congratulations!");
+                    return;
+                }
+
+                setSelectedImage(`data:image/jpeg;base64,${image.photo}`);
+                setRandomImage(image);
+                setUsedImageIds(prev => new Set(prev).add(image.id));
+
+                const img = new Image();
+                img.src = `data:image/jpeg;base64,${image.photo}`;
+                img.onload = () => {
+                    addScene(`scene-${sceneId}`, {
+                        type: "equirectangular",
+                        imageSource: `data:image/jpeg;base64,${image.photo}`,
+                        haov: equirectangularOptions.haov,
+                        vaov: equirectangularOptions.vaov,
+                        ...config
+                    }, loadNewScene);
+                };
+            } else {
+                console.error('Invalid image data received:', image);
+                showModal('Failed to load image. Please try again.');
+            }
         } catch (error) {
             console.error('Error retrieving random image:', error);
+            showModal('Error retrieving image. Please try again.');
         }
     };
 
-    const fetchLocationData = async () => {
+    const fetchLocationData = () => {
         setBuildings(['West Building', 'North Building', 'East Building', 'Thomas Hunter']);
     };
 
     useEffect(() => {
-        fetchAllImages();
+        fetchRandomImage();
         fetchLocationData();
     }, []);
+
+    useEffect(() => {
+    }, [selectedImage]);
 
     useEffect(() => {
         if (selectedBuilding) {
@@ -167,18 +166,16 @@ const Pano = () => {
 
     return (
         <div className='page-container'>
-
             <div className='scoreCounter'>
                 <div className='score'>
-                    <h3>Round</h3>
+                    <h3 className='scoreCounter_text'>Round</h3>
                     <p className='scoreCounter_text'>1</p>
                 </div>
                 <div className='score'>
-                    <h3>Score</h3>
+                    <h3 className='scoreCounter_text'>Score</h3>
                     <p className='scoreCounter_text'>{score}</p>
                 </div>
             </div>
-
             <ReactPannellum
                 ref={pannellumRef}
                 id="1"
@@ -188,6 +185,15 @@ const Pano = () => {
                 config={config}
                 equirectangularOptions={equirectangularOptions}
             />
+
+            {isModalVisible && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <p style={{color: 'white'}}>{modalMessage}</p>
+                        <button onClick={hideModal} className="modal-close-button">Close</button>
+                    </div>
+                </div>
+            )}
 
             <div className='bottom-right-container'>
                 <div className='dropdown-container'>
@@ -223,19 +229,16 @@ const Pano = () => {
                                 height="300px"
                                 width="400px"
                                 onClick={handleImageClick}
+                                className='floorplan-image'
                             />
                             {userLocation.x !== null && (
                                 <img
                                     src={pinpointLocation}
                                     alt="Pinpoint"
+                                    className='pinpoint-marker'
                                     style={{
-                                        position: 'absolute',
-                                        top: `${userLocation.y}%`,
                                         left: `${userLocation.x}%`,
-                                        transform: 'translate(-50%, -100%)',
-                                        width: '30px',
-                                        height: '30px',
-                                        pointerEvents: 'none',
+                                        top: `${userLocation.y}%`,
                                     }}
                                 />
                             )}
@@ -246,9 +249,20 @@ const Pano = () => {
                         {isFloorplanVisible ? 'Hide Floorplan' : 'Show Floorplan'}
                     </button>
                 </div>
+
+                <div className='next-img-container'>
+                    <button
+                        className='getRandomImageButton'
+                        onClick={fetchRandomImage}
+                        aria-label="Load the next random image"
+                    >
+                        Next Image
+                    </button>
+                </div>
             </div>
         </div>
     );
+
 };
 
 export default Pano;
