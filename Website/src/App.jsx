@@ -33,7 +33,7 @@ function App() {
 
   const NavBarWrapper = () => {
     const location = useLocation();
-    const hideNavPaths = ['/', '/signup'];
+    const hideNavPaths = ['/login', '/signup'];
     return !hideNavPaths.includes(location.pathname) ? <NavBar /> : null;
   };
 
@@ -43,6 +43,7 @@ function App() {
         <NavBarWrapper />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<Home />} />
           <Route path="/pano" element={<Pano />} />

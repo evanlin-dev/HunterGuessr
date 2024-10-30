@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoIcon from '@mui/icons-material/Info';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import AnnouncementIcon from '@mui/icons-material/Announcement';
+import MapIcon from '@mui/icons-material/Map';
 
 function Home() {
     return (
@@ -159,7 +159,7 @@ function Home() {
                                 Explore Unknown Places
                             </Typography>
                             <Typography>
-                                Travel virtually to random locations around the world and test your ability to recognize surroundings.
+                                Travel virtually to random locations around the Hunter campus and test your ability to recognize surroundings.
                             </Typography>
                         </Grid>
                         <Grid item xs={12} md={4}>
@@ -171,13 +171,14 @@ function Home() {
                                 Challenge your friends and see who has the best geographical knowledge.
                             </Typography>
                         </Grid>
+                        {/* Feature 3 - Replaced "Stay Updated" */}
                         <Grid item xs={12} md={4}>
-                            <AnnouncementIcon sx={{ fontSize: 50, color: 'primary.main', mb: 2 }} />
+                            <MapIcon sx={{ fontSize: 50, color: 'primary.main', mb: 2 }} />
                             <Typography variant="h6" gutterBottom>
-                                Stay Updated
+                                Explore Campus Landmarks
                             </Typography>
                             <Typography>
-                                Get the latest updates, new features, and announcements directly on the platform.
+                                Discover and learn about the significant landmarks and hidden gems within Hunter's campus.
                             </Typography>
                         </Grid>
                     </Grid>
@@ -228,11 +229,11 @@ function Home() {
                                     aria-controls="faq4-content"
                                     id="faq4-header"
                                 >
-                                    <Typography variant="h6">How can HunterGuessr help me learn about Hunter Campus?</Typography>
+                                    <Typography variant="h6">How can HunterGuessr help me learn about Hunter's campus?</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <Typography color="white">
-                                        By navigating through various panoramic views of Hunter's Campus, you'll become more familiar with its landmarks, pathways, and hidden gems. Each guess reinforces your spatial awareness and knowledge of the campus layout.
+                                        By navigating through various panoramic views of Hunter's campus, you'll become more familiar with its landmarks, pathways, and hidden gems. Each guess reinforces your spatial awareness and knowledge of the campus layout.
                                     </Typography>
                                 </AccordionDetails>
                             </Accordion>
@@ -248,7 +249,7 @@ function Home() {
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <Typography color="white">
-                                        It takes place at the various buildings at Hunter's Campus, located at{' '}
+                                        It takes place at the various buildings at Hunter's campus, located at{' '}
                                         <a
                                             href="https://maps.app.goo.gl/qztN42UK84KcS9gT9"
                                             target="_blank"
