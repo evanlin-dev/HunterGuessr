@@ -1,3 +1,4 @@
+import React from 'react';
 import './Stats.css';
 import { Pie, Bar, Line } from 'react-chartjs-2';
 import {
@@ -56,6 +57,22 @@ const Stats = () => {
     ],
   };
 
+  const pieChartOptions = {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          color: '#f0f0f0',
+        },
+      },
+      title: {
+        display: true,
+        text: 'Total Score, Games Played & Average Score',
+        color: '#f0f0f0',
+      },
+    },
+  };
+
   const lineChartData = {
     labels: Array.from({ length: gamesPlayed }, (_, i) => `Game ${i + 1}`),
     datasets: [
@@ -69,6 +86,44 @@ const Stats = () => {
     ],
   };
 
+  const lineChartOptions = {
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        ticks: {
+          color: '#f0f0f0',
+        },
+        grid: {
+          color: '#555555',
+        },
+      },
+      y: {
+        min: 0,
+        max: 500,
+        ticks: {
+          color: '#f0f0f0',
+          stepSize: 50,
+          beginAtZero: true,
+        },
+        grid: {
+          color: '#555555',
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: '#f0f0f0',
+        },
+      },
+      title: {
+        display: true,
+        text: 'Score Per Game',
+        color: '#f0f0f0',
+      },
+    },
+  };
+
   const averageScoreChartData = {
     labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'],
     datasets: [
@@ -80,6 +135,44 @@ const Stats = () => {
         borderWidth: 1,
       },
     ],
+  };
+
+  const averageScoreChartOptions = {
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        ticks: {
+          color: '#f0f0f0',
+        },
+        grid: {
+          color: '#555555',
+        },
+      },
+      y: {
+        min: 0,
+        max: 100,
+        ticks: {
+          color: '#f0f0f0',
+          stepSize: 10,
+          beginAtZero: true,
+        },
+        grid: {
+          color: '#555555',
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: '#f0f0f0',
+        },
+      },
+      title: {
+        display: true,
+        text: 'Average Score Over Time',
+        color: '#f0f0f0',
+      },
+    },
   };
 
   const totalUsersChartData = {
@@ -96,31 +189,65 @@ const Stats = () => {
     ],
   };
 
+  const totalUsersChartOptions = {
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        ticks: {
+          color: '#f0f0f0',
+        },
+        grid: {
+          color: '#555555',
+        },
+      },
+      y: {
+        min: 0,
+        max: 25,
+        ticks: {
+          color: '#f0f0f0',
+          stepSize: 5,
+          beginAtZero: true,
+        },
+        grid: {
+          color: '#555555',
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: '#f0f0f0',
+        },
+      },
+      title: {
+        display: true,
+        text: 'Total Users Growth Over Time',
+        color: '#f0f0f0',
+      },
+    },
+  };
+
   return (
-    <div className='container'>
+    <div className="container">
       <div className="stats-page">
         <div className="stats-wrapper">
           <div className="stats-container">
             <h2>User Statistics</h2>
             <div className="chart-container">
-              <h3>Pie Chart: Total Score, Games Played & Average Score</h3>
-              <Pie data={pieChartData} />
+              <Pie data={pieChartData} options={pieChartOptions} />
             </div>
             <div className="chart-container">
-              <h3>Line Chart: Score Per Game</h3>
-              <Line data={lineChartData} />
+              <Line data={lineChartData} options={lineChartOptions} />
             </div>
           </div>
 
           <div className="summary-container">
             <h2>Overall User Statistics</h2>
             <div className="chart-container">
-              <h3>Bar Chart: Average Score Over Time</h3>
-              <Bar data={averageScoreChartData} />
+              <Bar data={averageScoreChartData} options={averageScoreChartOptions} />
             </div>
             <div className="chart-container">
-              <h3>Line Chart: Total Users Growth Over Time</h3>
-              <Line data={totalUsersChartData} />
+              <Line data={totalUsersChartData} options={totalUsersChartOptions} />
             </div>
           </div>
         </div>
