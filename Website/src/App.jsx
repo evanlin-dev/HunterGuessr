@@ -42,7 +42,7 @@ function App() {
       <Router>
         <NavBarWrapper />
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<Home />} />
           <Route path="/pano" element={<Pano />} />
