@@ -10,11 +10,20 @@ import SearchIcon from '@mui/icons-material/Search';
 function NavBar() {
   return (
     <AppBar position="fixed" sx={{ backgroundColor: '#60269e' }} elevation={4}>
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Toolbar
+        sx={{
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <Box
           component={Link}
           to="/home"
           sx={{
+            position: 'absolute',
+            left: 16,
             display: 'flex',
             alignItems: 'center',
             color: 'inherit',
@@ -40,7 +49,6 @@ function NavBar() {
           </Typography>
         </Box>
 
-        {/* Center: Navigation Links */}
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button
             color="inherit"
@@ -48,7 +56,8 @@ function NavBar() {
             to="/pano"
             startIcon={<SportsEsportsIcon />}
             sx={{
-              textTransform: 'none', '&:hover': {
+              textTransform: 'none',
+              '&:hover': {
                 color: '#d1c4e9',
               },
             }}
@@ -61,7 +70,8 @@ function NavBar() {
             to="/stats"
             startIcon={<BarChartIcon />}
             sx={{
-              textTransform: 'none', '&:hover': {
+              textTransform: 'none',
+              '&:hover': {
                 color: '#d1c4e9',
               },
             }}
@@ -74,7 +84,8 @@ function NavBar() {
             to="/leaderboard"
             startIcon={<LeaderboardIcon />}
             sx={{
-              textTransform: 'none', '&:hover': {
+              textTransform: 'none',
+              '&:hover': {
                 color: '#d1c4e9',
               },
             }}
@@ -88,7 +99,9 @@ function NavBar() {
           component={Link}
           to="/settings"
           sx={{
-            ml: 1, '&:hover': {
+            position: 'absolute',
+            right: 16,
+            '&:hover': {
               color: '#d1c4e9',
             },
           }}
