@@ -11,6 +11,8 @@ const Pano = () => {
     const [randomImage, setRandomImage] = useState(null);
     const pannellumRef = useRef();
 
+    const [elapsedTime, setElapsedTime] = useState(0); // State for elapsed time
+
     const originalLocation = { x: 50, y: 50 };
     const [userLocation, setUserLocation] = useState({ x: null, y: null });
     const [score, setScore] = useState(0);
@@ -164,6 +166,27 @@ const Pano = () => {
         setIsFloorplanVisible(prevState => !prevState);
     };
 
+    // Timer logic
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setElapsedTime((prevTime) => prevTime + 1);
+        }, 1000); // Increment time every second
+
+        return () => clearInterval(timer); // Cleanup interval on component unmount
+    }, []);
+
+    // Format time in HH:MM:SS
+    const formatTime = (totalSeconds) => {
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = Math.floor(((totalSeconds % 3600) % 60));
+        if (hours == 0) {
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        } else {
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+    };
+
     return (
         <div className='page-container'>
             <div className='scoreCounter'>
@@ -174,6 +197,10 @@ const Pano = () => {
                 <div className='score'>
                     <h3 className='scoreCounter_text'>Score</h3>
                     <p className='scoreCounter_text'>{score}</p>
+                </div>
+                <div className='score'>
+                    <h3>Time</h3>
+                    <p className='scoreCounter_text'>{formatTime(elapsedTime)}</p> {/* Display formatted time */}
                 </div>
             </div>
             <ReactPannellum
