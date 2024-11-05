@@ -2,7 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\Website",
+    "\\Website\\.vite",
+    "\\Website\\public",
     "\\Website\\src",
+    "\\Website\\src\\components",
     "\\Website\\src\\pages"
   ],
   "SelectedNode": "\\Website",

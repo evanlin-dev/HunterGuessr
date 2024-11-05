@@ -120,6 +120,7 @@ const Pano = () => {
             console.error('Error retrieving random image:', error);
             showModal('Error retrieving image. Please try again.');
         }
+        setElapsedTime(0); // Reset time on new image
     };
 
     const fetchLocationData = () => {
@@ -199,7 +200,7 @@ const Pano = () => {
                     <p className='scoreCounter_text'>{score}</p>
                 </div>
                 <div className='score'>
-                    <h3>Time</h3>
+                    <h3 className='scoreCounter_text'>Time</h3>
                     <p className='scoreCounter_text'>{formatTime(elapsedTime)}</p> {/* Display formatted time */}
                 </div>
             </div>

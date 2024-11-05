@@ -6,6 +6,7 @@ import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SearchIcon from '@mui/icons-material/Search';
+import HistoryIcon from '@mui/icons-material/History';
 
 function NavBar() {
   return (
@@ -93,7 +94,20 @@ function NavBar() {
             Leaderboard
           </Button>
         </Box>
-
+        <Button
+            color="inherit"
+            component={Link}
+            to="/match_hist"
+            startIcon={<HistoryIcon />}
+            sx={{
+                textTransform: 'none',
+                '&:hover': {
+                    color: '#d1c4e9',
+                },
+            }}
+        >
+            Match History
+        </Button>
         <IconButton
           color="inherit"
           component={Link}

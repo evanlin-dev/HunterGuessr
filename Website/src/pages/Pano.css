@@ -38,7 +38,7 @@
 
 .scoreCounter_text,
 h3 {
-    color: black !important;
+    color: black;
     margin: 0;
     font-size: 1rem;
 }

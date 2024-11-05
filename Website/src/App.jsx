@@ -7,6 +7,7 @@ import Stats from './pages/Stats';
 import Leaderboard from './pages/Leaderboard';
 import Settings from './pages/Settings';
 import Home from './pages/Home';
+import MatchHist from './pages/MatchHist';
 import NavBar from './components/NavBar';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -49,6 +50,7 @@ function App() {
           <Route path="/pano" element={<Pano />} />
           <Route path="/stats" element={<Stats />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/match_hist" element={<MatchHist />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
