@@ -246,3 +246,13 @@ h3 {
 .pnlm-load-box{
     display: none !important;
 }
+
+.openGraphButton {
+    background-color: #60269e;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 9.5em
+}

@@ -191,7 +191,7 @@ function Home() {
                         borderRadius: 4,
                         backgroundColor: '#f5f5f5',
                         color: '#000',
-                        mb: 6,
+                        mb: 2,
                     }}
                 >
                     <Typography variant="h4" gutterBottom>
@@ -265,12 +265,6 @@ function Home() {
                         </Grid>
                     </Grid>
                 </Paper>
-
-                <Box sx={{ backgroundColor: '#60269e', color: '#fff', py: 4, borderRadius: 4 }}>
-                    <Typography variant="body2" align="center" color="white">
-                        © {new Date().getFullYear()} HunterGuessr. All rights reserved.
-                    </Typography>
-                </Box>
             </Container>
         </Box>
     );
