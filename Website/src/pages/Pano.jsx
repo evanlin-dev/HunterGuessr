@@ -4,6 +4,7 @@ import axios from 'axios';
 import './Pano.css';
 import floorPlan from '../assets/images/floorplan7.png';
 import pinpointLocation from '../assets/images/PinpointLocation.png';
+import { Graph } from 'react-d3-graph';
 
 const Pano = () => {
     const [sceneId, setSceneId] = useState(0);
@@ -11,8 +12,7 @@ const Pano = () => {
     const [randomImage, setRandomImage] = useState(null);
     const pannellumRef = useRef();
 
-    const [elapsedTime, setElapsedTime] = useState(0); // State for elapsed time
-
+    const [elapsedTime, setElapsedTime] = useState(0);
     const originalLocation = { x: 50, y: 50 };
     const [userLocation, setUserLocation] = useState({ x: null, y: null });
     const [score, setScore] = useState(0);
@@ -30,6 +30,10 @@ const Pano = () => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+
+    const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
+    const [graphData, setGraphData] = useState(null);
+    const [visibleNodes, setVisibleNodes] = useState(new Set(['Buildings']));
 
     const showModal = (message) => {
         setModalMessage(message);
@@ -122,33 +126,68 @@ const Pano = () => {
         }
     };
 
-    const fetchLocationData = () => {
-        setBuildings(['West Building', 'North Building', 'East Building', 'Thomas Hunter']);
+    const buildingData = {
+        'West Building': {
+            floors: ['Floor 1', 'Floor 2', 'Floor 3'],
+            rooms: {
+                'Floor 1': ['West Room 101', 'West Room 102', 'West Room 103'],
+                'Floor 2': ['West Room 201', 'West Room 202', 'West Room 203'],
+                'Floor 3': ['West Room 301', 'West Room 302', 'West Room 303'],
+            }
+        },
+        'North Building': {
+            floors: ['Floor 1', 'Floor 2', 'Floor 3'],
+            rooms: {
+                'Floor 1': ['North Room 101', 'North Room 102', 'North Room 103'],
+                'Floor 2': ['North Room 201', 'North Room 202', 'North Room 203'],
+                'Floor 3': ['North Room 301', 'North Room 302', 'North Room 303'],
+            }
+        },
+        'East Building': {
+            floors: ['Floor 1', 'Floor 2', 'Floor 3'],
+            rooms: {
+                'Floor 1': ['East Room 101', 'East Room 102', 'East Room 103'],
+                'Floor 2': ['East Room 201', 'East Room 202', 'East Room 203'],
+                'Floor 3': ['East Room 301', 'East Room 302', 'East Room 303'],
+            }
+        },
+        'Thomas Hunter': {
+            floors: ['Floor 1', 'Floor 2', 'Floor 3'],
+            rooms: {
+                'Floor 1': ['Hunter Room 101', 'Hunter Room 102', 'Hunter Room 103'],
+                'Floor 2': ['Hunter Room 201', 'Hunter Room 202', 'Hunter Room 203'],
+                'Floor 3': ['Hunter Room 301', 'Hunter Room 302', 'Hunter Room 303'],
+            }
+        }
     };
 
     useEffect(() => {
         fetchRandomImage();
-        fetchLocationData();
+        setBuildings(Object.keys(buildingData));
     }, []);
 
     useEffect(() => {
-    }, [selectedImage]);
-
-    useEffect(() => {
         if (selectedBuilding) {
-            setFloors(['Floor 1', 'Floor 2', 'Floor 3']);
+            setFloors(buildingData[selectedBuilding].floors);
             setSelectedFloor('');
-            setSelectedRoom('');
             setRooms([]);
+            setSelectedRoom('');
+        } else {
+            setFloors([]);
+            setSelectedFloor('');
+            setRooms([]);
+            setSelectedRoom('');
         }
     }, [selectedBuilding]);
 
     useEffect(() => {
-        if (selectedFloor) {
-            setRooms(['Room 101', 'Room 102', 'Room 103']);
+        if (selectedFloor && selectedBuilding) {
+            setRooms(buildingData[selectedBuilding].rooms[selectedFloor]);
             setSelectedRoom('');
+        } else {
+            setRooms([]);
         }
-    }, [selectedFloor]);
+    }, [selectedFloor, selectedBuilding]);
 
     const handleBuildingChange = (e) => {
         setSelectedBuilding(e.target.value);
@@ -170,21 +209,126 @@ const Pano = () => {
     useEffect(() => {
         const timer = setInterval(() => {
             setElapsedTime((prevTime) => prevTime + 1);
-        }, 1000); // Increment time every second
+        }, 1000);
 
-        return () => clearInterval(timer); // Cleanup interval on component unmount
+        return () => clearInterval(timer);
     }, []);
 
-    // Format time in HH:MM:SS
     const formatTime = (totalSeconds) => {
         const hours = Math.floor(totalSeconds / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = Math.floor(((totalSeconds % 3600) % 60));
-        if (hours == 0) {
-            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        } else {
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        return hours === 0
+            ? `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+            : `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+
+    useEffect(() => {
+        if (isGraphModalVisible) {
+            setGraphData(generateGraphData());
         }
+    }, [isGraphModalVisible, visibleNodes]);
+
+    const generateGraphData = () => {
+        const nodes = [
+            { id: 'Buildings', symbolType: 'circle' },
+            ...Object.keys(buildingData)
+                .filter(building => visibleNodes.has('Buildings'))
+                .map(building => ({ id: building })),
+            ...Object.keys(buildingData).flatMap(building =>
+                buildingData[building].floors
+                    .filter(floor => visibleNodes.has(building))
+                    .map(floor => ({ id: `${building}-${floor}` }))
+            ),
+            ...Object.keys(buildingData).flatMap(building =>
+                buildingData[building].floors.flatMap(floor =>
+                    buildingData[building].rooms[floor]
+                        .filter(room => visibleNodes.has(`${building}-${floor}`))
+                        .map(room => ({ id: `${building}-${floor}-${room}` }))
+                )
+            ),
+        ];
+
+        const links = [
+            ...Object.keys(buildingData)
+                .filter(building => visibleNodes.has('Buildings'))
+                .map(building => ({ source: 'Buildings', target: building })),
+            ...Object.keys(buildingData).flatMap(building =>
+                buildingData[building].floors
+                    .filter(floor => visibleNodes.has(building))
+                    .map(floor => ({ source: building, target: `${building}-${floor}` }))
+            ),
+            ...Object.keys(buildingData).flatMap(building =>
+                buildingData[building].floors.flatMap(floor =>
+                    buildingData[building].rooms[floor]
+                        .filter(room => visibleNodes.has(`${building}-${floor}`))
+                        .map(room => ({
+                            source: `${building}-${floor}`,
+                            target: `${building}-${floor}-${room}`
+                        }))
+                )
+            ),
+        ];
+
+        return { nodes, links };
+    };
+
+    const toggleGraphModal = () => {
+        setIsGraphModalVisible(prev => !prev);
+    };
+
+    const closeModal = (e) => {
+        if (e.target.className === "modal-overlay") {
+            setIsGraphModalVisible(false);
+        }
+    };
+
+    const handleNodeClick = (nodeId) => {
+        setVisibleNodes(prevVisibleNodes => {
+            const newVisibleNodes = new Set(prevVisibleNodes);
+            if (newVisibleNodes.has(nodeId)) {
+                newVisibleNodes.delete(nodeId);
+            } else {
+                newVisibleNodes.add(nodeId);
+            }
+            return newVisibleNodes;
+        });
+
+        if (nodeId.includes('Room')) {
+            setSelectedRoom(nodeId);
+        }
+    };
+
+    const submitSelection = () => {
+        if (selectedRoom) {
+            alert(`Room "${selectedRoom}" selected!`);
+            setIsGraphModalVisible(false);
+        } else {
+            alert("No room selected!");
+        }
+    };
+
+    const graphConfig = {
+        node: {
+            color: '#60269e',
+            size: 300,
+            fontColor: 'white',
+            fontSize: 12,
+            labelProperty: 'id',
+        },
+        link: { highlightColor: 'lightblue' },
+        directed: true,
+        height: 700,
+        width: 1000,
+        panAndZoom: true,
+        staticGraph: false,
+        d3: {
+            gravity: -300,
+            linkLength: 250,
+            alphaTarget: 0,
+        },
+        maxZoom: 2,
+        minZoom: 0.5,
     };
 
     return (
@@ -199,8 +343,8 @@ const Pano = () => {
                     <p className='scoreCounter_text'>{score}</p>
                 </div>
                 <div className='score'>
-                    <h3>Time</h3>
-                    <p className='scoreCounter_text'>{formatTime(elapsedTime)}</p> {/* Display formatted time */}
+                    <h3 className='scoreCounter_text'>Time</h3>
+                    <p className='scoreCounter_text'>{formatTime(elapsedTime)}</p>
                 </div>
             </div>
             <ReactPannellum
@@ -216,7 +360,7 @@ const Pano = () => {
             {isModalVisible && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <p style={{color: 'white'}}>{modalMessage}</p>
+                        <p style={{ color: 'white' }}>{modalMessage}</p>
                         <button onClick={hideModal} className="modal-close-button">Close</button>
                     </div>
                 </div>
@@ -247,35 +391,6 @@ const Pano = () => {
                         </select>
                     </div>
                 </div>
-                <div className='floorplan-container'>
-                    {isFloorplanVisible && (
-                        <div className='floorplan'>
-                            <img
-                                src={floorPlan}
-                                alt="Floor Plan"
-                                height="300px"
-                                width="400px"
-                                onClick={handleImageClick}
-                                className='floorplan-image'
-                            />
-                            {userLocation.x !== null && (
-                                <img
-                                    src={pinpointLocation}
-                                    alt="Pinpoint"
-                                    className='pinpoint-marker'
-                                    style={{
-                                        left: `${userLocation.x}%`,
-                                        top: `${userLocation.y}%`,
-                                    }}
-                                />
-                            )}
-                        </div>
-                    )}
-
-                    <button className='toggleFloorplanButton' onClick={toggleFloorplan}>
-                        {isFloorplanVisible ? 'Hide Floorplan' : 'Show Floorplan'}
-                    </button>
-                </div>
 
                 <div className='next-img-container'>
                     <button
@@ -286,10 +401,63 @@ const Pano = () => {
                         Next Image
                     </button>
                 </div>
-            </div>
-        </div>
-    );
+                <div>
+                    <div style={{
+                        backgroundColor: 'rgba(217, 217, 217, 1)',
+                        borderRadius: '10px',
+                        padding: '10px',
+                        marginTop: '10px',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}>
+                        <button onClick={toggleGraphModal} className="openGraphButton">
+                            Open Building Map
+                        </button>
+                    </div>
 
+                    {isGraphModalVisible && (
+                        <div className="modal-overlay" onClick={closeModal} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div className="modal-content" style={{
+                                width: '80%',
+                                maxHeight: '80%',
+                                backgroundColor: '#333',
+                                padding: '20px',
+                                overflowY: 'auto',
+                                position: 'relative',
+                            }}>
+                                <button onClick={toggleGraphModal} className="modal-close-button" style={{
+                                    position: 'absolute', top: '10px', right: '10px', color: 'white', fontSize: '20px', background: 'transparent', border: 'none', cursor: 'pointer'
+                                }}>
+                                    &times;
+                                </button>
+                                {graphData && (
+                                    <Graph
+                                        id="buildingGraph"
+                                        data={graphData}
+                                        config={graphConfig}
+                                        onClickNode={handleNodeClick}
+                                    />
+                                )}
+                                {selectedRoom && (
+                                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                                        <p style={{ color: 'white' }}>Selected Room: {selectedRoom}</p>
+                                        <button style={{
+                                            backgroundColor: '#60269e', padding: '8px 12px',
+                                            fontSize: '0.9rem', borderRadius: '5px',
+                                            cursor: 'pointer',
+                                            transition: 'background-color 0.3s',
+                                            width: '9.5em'
+                                        }} onClick={submitSelection}>Submit Selection</button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div >
+    );
 };
 
 export default Pano;
