@@ -95,18 +95,18 @@ function NavBar() {
           </Button>
         </Box>
         <Button
-            color="inherit"
-            component={Link}
-            to="/match_hist"
-            startIcon={<HistoryIcon />}
-            sx={{
-                textTransform: 'none',
-                '&:hover': {
-                    color: '#d1c4e9',
-                },
-            }}
+          color="inherit"
+          component={Link}
+          to="/match_hist"
+          startIcon={<HistoryIcon />}
+          sx={{
+            textTransform: 'none',
+            '&:hover': {
+              color: '#d1c4e9',
+            },
+          }}
         >
-            Match History
+          Match History
         </Button>
         <IconButton
           color="inherit"
