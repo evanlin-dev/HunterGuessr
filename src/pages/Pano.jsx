@@ -16,6 +16,7 @@ const Pano = () => {
     const originalLocation = { x: 50, y: 50 };
     const [userLocation, setUserLocation] = useState({ x: null, y: null });
     const [score, setScore] = useState(0);
+    const [round, setRound] = useState(-1);
     const [isFloorplanVisible, setIsFloorplanVisible] = useState(true);
 
     const [buildings, setBuildings] = useState([]);
@@ -124,7 +125,10 @@ const Pano = () => {
             console.error('Error retrieving random image:', error);
             showModal('Error retrieving image. Please try again.');
         }
+        // save data for match hist - on next image click
+        //saveData();
         setElapsedTime(0); // Reset time on new image
+        incrementRound(); // Increment round on new image
     };
 
     const buildingData = {
@@ -309,6 +313,23 @@ const Pano = () => {
         }
     };
 
+    const incrementRound = () => {
+        // Increment round
+        setScore(0); // Reset score on new round
+        setRound(prevRound => prevRound + 1); // Increment round by 1)
+    }
+
+    // save data for match hist - on next image click
+    /*const saveData = () => {
+        const data = {
+            id: rows.length + 1, // Increment ID for new row
+            name: 'User', // Replace with actual username
+            time: formatTime(elapsedTime), // Format time
+            score: score, // Score from current round
+        };
+        addRow(data);
+    };*/
+
     const graphConfig = {
         node: {
             color: '#60269e',
@@ -337,7 +358,7 @@ const Pano = () => {
             <div className='scoreCounter'>
                 <div className='score'>
                     <h3 className='scoreCounter_text'>Round</h3>
-                    <p className='scoreCounter_text'>1</p>
+                    <p className='scoreCounter_text'>{round}</p>
                 </div>
                 <div className='score'>
                     <h3 className='scoreCounter_text'>Score</h3>
