@@ -1,0 +1,27 @@
+h2 {
+    font-size: 42px;
+    text-align: center;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    font-size: 18px;
+    margin: 10px 0;
+    text-align: left;
+}
+
+.main-page-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
