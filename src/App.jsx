@@ -11,6 +11,8 @@ import MatchHist from './pages/MatchHist';
 import NavBar from './components/NavBar';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { GlobalStyles } from '@mui/material';
+import backgroundImage from './assets/images/HunterCoverPicture.png';
 
 function App() {
   const theme = createTheme({
@@ -38,15 +40,47 @@ function App() {
     return !hideNavPaths.includes(location.pathname) ? <NavBar /> : null;
   };
 
+  const BodyStyles = () => {
+    const location = useLocation();
+    const allowOverflowPaths = ['/', '/home'];
+    const shouldHideOverflow = !allowOverflowPaths.includes(location.pathname);
+
+    return (
+      <GlobalStyles
+        styles={{
+          'html, body': {
+            height: '100%',
+            margin: 0,
+            padding: 0,
+            overflow: shouldHideOverflow ? 'hidden' : 'auto',
+          },
+          '#root': {
+            minHeight: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+          },
+          body: {
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center center',
+            backgroundSize: 'cover',
+            fontFamily: 'Arial, sans-serif',
+          },
+        }}
+      />
+    );
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
+        <BodyStyles />
         <NavBarWrapper />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/home" element={<Home />} />
           <Route path="/pano" element={<Pano />} />
           <Route path="/stats" element={<Stats />} />
           <Route path="/leaderboard" element={<Leaderboard />} />

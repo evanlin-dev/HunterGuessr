@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Stats.css';
 import { Pie, Bar, Line } from 'react-chartjs-2';
+import { auth } from '../firebase';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,6 +15,8 @@ import {
   Legend,
   ArcElement,
 } from 'chart.js';
+import { Box, Button } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 ChartJS.register(
   CategoryScale,
@@ -27,6 +31,70 @@ ChartJS.register(
 );
 
 const Stats = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const theme = useTheme();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (!isLoggedIn) {
+    return (
+      <Box
+        sx={{
+          marginTop: '5em',
+          textAlign: 'center',
+          color: '#f0f0f0',
+          backgroundColor: theme.palette.background.paper,
+          padding: '2em',
+          borderRadius: '15px',
+          width: 'fit-content',
+          ml: 'auto',
+          mr: 'auto',
+          mt: '6em',
+        }}
+      >
+        <h2>Please log in to view your statistics.</h2>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1em', marginTop: '1em' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/login"
+            sx={{
+              borderRadius: '5px', '&:hover': {
+                color: '#d1c4e9',
+              },
+            }}
+          >
+            Login
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            component={Link}
+            to="/signup"
+            sx={{
+              borderRadius: '5px', '&:hover': {
+                color: '#d1c4e9',
+              },
+            }}
+          >
+            Sign Up
+          </Button>
+        </Box>
+      </Box>
+    );
+  }
+
   const gamesPlayed = 30;
   const scores = Array.from({ length: gamesPlayed }, () => Math.floor(Math.random() * 100) + 50);
   const totalScore = scores.reduce((acc, score) => acc + score, 0);

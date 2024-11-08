@@ -70,7 +70,7 @@ const Leaderboard = () => {
     }, []);
 
     return (
-        <div>
+        <div style={{marginTop:'5em'}}>
             <h2>Leaderboard</h2>
             <div className="data-table">
                 <DataGrid

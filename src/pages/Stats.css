@@ -1,49 +1,48 @@
 .container {
-    margin-top: 3em;
-  }
-  
-  .stats-page {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-  }
-  
-  .stats-wrapper {
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
-    gap: 20px;
-  }
-  
-  .stats-container,
-  .summary-container {
-    width: 30em;
-    padding: 20px;
-    background-color: #373737;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    color: #f0f0f0;
-  }
-  
-  .chart-container {
-    margin: 40px 0;
-    height: 15em;
-  }
-  
-  .chart-container canvas {
-    width: 100% !important;
-    height: 100% !important;
-  }
-  
-  h2,
-  h3 {
-    text-align: center;
-    color: #f0f0f0;
-  }
-  
-  .stats-container p,
-  .summary-container p,
-  .chart-container p {
-    color: #f0f0f0;
-  }
-  
+  margin-top: 5em;
+}
+
+.stats-page {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.stats-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  gap: 20px;
+}
+
+.stats-container,
+.summary-container {
+  width: 30em;
+  padding: 20px;
+  background-color: #373737;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #f0f0f0;
+}
+
+.chart-container {
+  margin: 40px 0;
+  height: 15em;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+h2,
+h3 {
+  text-align: center;
+  color: #f0f0f0;
+}
+
+.stats-container p,
+.summary-container p,
+.chart-container p {
+  color: #f0f0f0;
+}

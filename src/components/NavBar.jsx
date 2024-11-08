@@ -1,5 +1,12 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, IconButton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  IconButton,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
@@ -7,28 +14,32 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SearchIcon from '@mui/icons-material/Search';
 import HistoryIcon from '@mui/icons-material/History';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 function NavBar() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <AppBar position="fixed" sx={{ backgroundColor: '#60269e' }} elevation={4}>
-      <Toolbar
-        sx={{
-          position: 'relative',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <Toolbar sx={{ display: 'flex' }}>
         <Box
           component={Link}
           to="/home"
           sx={{
-            position: 'absolute',
-            left: 16,
             display: 'flex',
             alignItems: 'center',
             color: 'inherit',
             textDecoration: 'none',
+            flexGrow: 1,
             '&:hover': {
               color: '#d1c4e9',
             },
@@ -50,7 +61,14 @@ function NavBar() {
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 1,
+            flexGrow: 1,
+            justifyContent: 'center',
+          }}
+        >
           <Button
             color="inherit"
             component={Link}
@@ -93,35 +111,83 @@ function NavBar() {
           >
             Leaderboard
           </Button>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/match_hist"
+            startIcon={<HistoryIcon />}
+            sx={{
+              textTransform: 'none',
+              '&:hover': {
+                color: '#d1c4e9',
+              },
+            }}
+          >
+            Match History
+          </Button>
         </Box>
-        <Button
-          color="inherit"
-          component={Link}
-          to="/match_hist"
-          startIcon={<HistoryIcon />}
+
+        <Box
           sx={{
-            textTransform: 'none',
-            '&:hover': {
-              color: '#d1c4e9',
-            },
+            display: 'flex',
+            alignItems: 'center',
+            flexGrow: 1,
+            justifyContent: 'flex-end',
           }}
         >
-          Match History
-        </Button>
-        <IconButton
-          color="inherit"
-          component={Link}
-          to="/settings"
-          sx={{
-            position: 'absolute',
-            right: 16,
-            '&:hover': {
-              color: '#d1c4e9',
-            },
-          }}
-        >
-          <SettingsIcon />
-        </IconButton>
+          {user ? (
+            <Typography
+              variant="subtitle1"
+              sx={{
+                marginRight: 2,
+                color: 'inherit',
+              }}
+            >
+              Welcome back, {user.displayName || user.email}
+            </Typography>
+          ) : (
+            <>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/login"
+                sx={{
+                  textTransform: 'none',
+                  '&:hover': {
+                    color: '#d1c4e9',
+                  },
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                color="inherit"
+                component={Link}
+                to="/signup"
+                sx={{
+                  textTransform: 'none',
+                  '&:hover': {
+                    color: '#d1c4e9',
+                  },
+                }}
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
+          <IconButton
+            color="inherit"
+            component={Link}
+            to="/settings"
+            sx={{
+              '&:hover': {
+                color: '#d1c4e9',
+              },
+            }}
+          >
+            <SettingsIcon />
+          </IconButton>
+        </Box>
       </Toolbar>
     </AppBar>
   );
