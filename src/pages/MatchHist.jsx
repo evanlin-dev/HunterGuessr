@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './MatchHist.css';
 import { DataGrid } from '@mui/x-data-grid';
@@ -47,18 +47,22 @@ const rows = [
 ];
 
 const MatchHist = () => {
-    const [players, setPlayers] = useState([]);
-    const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const theme = useTheme();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        // Fetch leaderboard data
-        /*fetch('https://your-backend-url/api/leaderboard')
-            .then((response) => response.json())
-            .then((data) => setPlayers(data))
-            .catch((error) => console.error("Error fetching data:", error));
-            */
-    }, []);
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
+  if (!isLoggedIn) {
     return (
         <div>
             <h2>Match History</h2>
@@ -105,8 +109,56 @@ const MatchHist = () => {
             </div>
             <button type="main-page-button" onClick={() => navigate('/')}>Back to Main Page</button>
         </div>
-
     );
+  }
+
+  return (
+    <div>
+      <h2>Match History</h2>
+      <div className="data-table">
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
+            },
+          }}
+          pageSizeOptions={[5]}
+          disableSelectionOnClick
+          disableColumnSelector
+          disableCellFocusOutline
+          sx={{
+            backgroundColor: '#f0f0f0', // Header background color
+            color: '#333', // Header text color
+            fontSize: '16px',
+            '& .MuiDataGrid-row': {
+              backgroundColor: '#fff', // Row background color
+              '&:nth-of-type(odd)': {
+                backgroundColor: '#f9f9f9', // Alternate row color
+              },
+            },
+            '& .MuiDataGrid-selectedRowCount': {
+              color: '#f0f0f0', // Footer row count text color
+            },
+            '& .MuiTablePagination-root': {
+              backgroundColor: '#f0f0f0', // Header background color
+              color: '#333', // Header text color
+            },
+            '& .MuiDataGrid-cell:hover': {
+              backgroundColor: '#fff', // Row background color
+              '&:nth-of-type(odd)': {
+                backgroundColor: 'inherit',
+              },
+            },
+          }}
+        />
+      </div>
+      <button type="main-page-button" onClick={() => navigate('/')}>Back to Main Page</button>
+    </div>
+  );
 };
 
 export default MatchHist;

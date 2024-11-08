@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TextField,
   Button,
@@ -10,21 +10,78 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {
+  getAuth,
+  signOut,
+  updateEmail,
+  updatePassword,
+  onAuthStateChanged,
+} from 'firebase/auth';
 
 function Settings() {
-  const [username, setUsername] = useState('User123');
-  const [email, setEmail] = useState('user@example.com');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setEmail(user.email || '');
+
+        // TODO: Retrieve the username from your database
+        
+      } else {
+        navigate('/login');
+      }
+    });
+    return () => unsubscribe();
+  }, [auth, navigate]);
 
   const handleSave = () => {
-    console.log('Settings saved:', { username, email, password });
+    const user = auth.currentUser;
+    if (user) {
+      const promises = [];
+
+      // TODO: Save the username to your database
+
+      if (email && email !== user.email) {
+        promises.push(
+          updateEmail(user, email).catch((error) => {
+            console.error('Error updating email:', error);
+          })
+        );
+      }
+
+      if (password) {
+        promises.push(
+          updatePassword(user, password).catch((error) => {
+            console.error('Error updating password:', error);
+          })
+        );
+      }
+
+      Promise.all(promises)
+        .then(() => {
+          console.log('Settings saved successfully');
+        })
+        .catch((error) => {
+          console.error('Error saving settings:', error);
+        });
+    }
   };
 
   const handleLogout = () => {
-    console.log('User logged out');
-    navigate('/');
+    signOut(auth)
+      .then(() => {
+        console.log('User logged out');
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error('Error logging out:', error);
+      });
   };
 
   const handleClickShowPassword = () => {
@@ -42,6 +99,8 @@ function Settings() {
         alignItems: 'flex-start',
         minHeight: '80vh',
         pt: 8,
+        overflow: 'hidden',
+        mt: '3em'
       }}
     >
       <Paper
@@ -68,6 +127,7 @@ function Settings() {
           />
           <TextField
             label="Email"
+            type="email"
             fullWidth
             margin="normal"
             value={email}
@@ -84,7 +144,9 @@ function Settings() {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={
+                      showPassword ? 'Hide password' : 'Show password'
+                    }
                     onClick={handleClickShowPassword}
                     edge="end"
                   >
