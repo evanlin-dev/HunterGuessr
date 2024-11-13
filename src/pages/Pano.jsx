@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactPannellum, { addScene, loadScene } from "react-pannellum";
 import axios from 'axios';
 import './Pano.css';
-import floorPlan from '../assets/images/floorplan7.png';
-import pinpointLocation from '../assets/images/PinpointLocation.png';
 import { Graph } from 'react-d3-graph';
 
 const Pano = () => {
@@ -131,36 +129,36 @@ const Pano = () => {
         'West Building': {
             floors: ['Floor 1', 'Floor 2', 'Floor 3'],
             rooms: {
-                'Floor 1': ['West Room 101', 'West Room 102', 'West Room 103'],
-                'Floor 2': ['West Room 201', 'West Room 202', 'West Room 203'],
-                'Floor 3': ['West Room 301', 'West Room 302', 'West Room 303'],
+                'Floor 1': ['W101', 'W102', 'W103'],
+                'Floor 2': ['W201', 'W202', 'W203'],
+                'Floor 3': ['W301', 'W302', 'W303'],
             }
         },
         'North Building': {
             floors: ['Floor 1', 'Floor 2', 'Floor 3'],
             rooms: {
-                'Floor 1': ['North Room 101', 'North Room 102', 'North Room 103'],
-                'Floor 2': ['North Room 201', 'North Room 202', 'North Room 203'],
-                'Floor 3': ['North Room 301', 'North Room 302', 'North Room 303'],
+                'Floor 1': ['N101', 'N102', 'N103'],
+                'Floor 2': ['N201', 'N202', 'N203'],
+                'Floor 3': ['N301', 'N302', 'N303'],
             }
         },
         'East Building': {
             floors: ['Floor 1', 'Floor 2', 'Floor 3'],
             rooms: {
-                'Floor 1': ['East Room 101', 'East Room 102', 'East Room 103'],
-                'Floor 2': ['East Room 201', 'East Room 202', 'East Room 203'],
-                'Floor 3': ['East Room 301', 'East Room 302', 'East Room 303'],
+                'Floor 1': ['E101', 'E102', 'E103'],
+                'Floor 2': ['E201', 'E202', 'E203'],
+                'Floor 3': ['E301', 'E302', 'E303'],
             }
         },
         'Thomas Hunter': {
             floors: ['Floor 1', 'Floor 2', 'Floor 3'],
             rooms: {
-                'Floor 1': ['Hunter Room 101', 'Hunter Room 102', 'Hunter Room 103'],
-                'Floor 2': ['Hunter Room 201', 'Hunter Room 202', 'Hunter Room 203'],
-                'Floor 3': ['Hunter Room 301', 'Hunter Room 302', 'Hunter Room 303'],
+                'Floor 1': ['T101', 'T102', 'T103'],
+                'Floor 2': ['T201', 'T202', 'T203'],
+                'Floor 3': ['T301', 'T302', 'T303'],
             }
         }
-    };
+    };    
 
     useEffect(() => {
         fetchRandomImage();
@@ -230,74 +228,51 @@ const Pano = () => {
         }
     }, [isGraphModalVisible, visibleNodes]);
 
-    const generateGraphData = () => {
-        const nodes = [
-            { id: 'Buildings', symbolType: 'circle' },
-            ...Object.keys(buildingData)
-                .filter(building => visibleNodes.has('Buildings'))
-                .map(building => ({ id: building })),
-            ...Object.keys(buildingData).flatMap(building =>
-                buildingData[building].floors
-                    .filter(floor => visibleNodes.has(building))
-                    .map(floor => ({ id: `${building}-${floor}` }))
-            ),
-            ...Object.keys(buildingData).flatMap(building =>
-                buildingData[building].floors.flatMap(floor =>
-                    buildingData[building].rooms[floor]
-                        .filter(room => visibleNodes.has(`${building}-${floor}`))
-                        .map(room => ({ id: `${building}-${floor}-${room}` }))
-                )
-            ),
-        ];
-
-        const links = [
-            ...Object.keys(buildingData)
-                .filter(building => visibleNodes.has('Buildings'))
-                .map(building => ({ source: 'Buildings', target: building })),
-            ...Object.keys(buildingData).flatMap(building =>
-                buildingData[building].floors
-                    .filter(floor => visibleNodes.has(building))
-                    .map(floor => ({ source: building, target: `${building}-${floor}` }))
-            ),
-            ...Object.keys(buildingData).flatMap(building =>
-                buildingData[building].floors.flatMap(floor =>
-                    buildingData[building].rooms[floor]
-                        .filter(room => visibleNodes.has(`${building}-${floor}`))
-                        .map(room => ({
-                            source: `${building}-${floor}`,
-                            target: `${building}-${floor}-${room}`
-                        }))
-                )
-            ),
-        ];
-
-        return { nodes, links };
-    };
-
     const toggleGraphModal = () => {
         setIsGraphModalVisible(prev => !prev);
     };
 
     const closeModal = (e) => {
-        if (e.target.className === "modal-overlay") {
+        if (e.target === e.currentTarget) {
             setIsGraphModalVisible(false);
         }
     };
 
     const handleNodeClick = (nodeId) => {
-        setVisibleNodes(prevVisibleNodes => {
+        setVisibleNodes((prevVisibleNodes) => {
             const newVisibleNodes = new Set(prevVisibleNodes);
-            if (newVisibleNodes.has(nodeId)) {
-                newVisibleNodes.delete(nodeId);
+    
+            if (nodeId.includes('Room')) {
+                setSelectedRoom(nodeId);
             } else {
-                newVisibleNodes.add(nodeId);
+                const isExpanded = Array.from(newVisibleNodes).some((n) => n.startsWith(`${nodeId}-`));
+                if (isExpanded) {
+                    const nodesToRemove = Array.from(newVisibleNodes).filter((n) =>
+                        n.startsWith(`${nodeId}-`)
+                    );
+                    nodesToRemove.forEach((n) => newVisibleNodes.delete(n));
+                } else {
+                    if (nodeId === 'Buildings') {
+                        Object.keys(buildingData).forEach((building) => {
+                            newVisibleNodes.add(building);
+                        });
+                    } else if (Object.keys(buildingData).includes(nodeId)) {
+                        buildingData[nodeId].floors.forEach((floor) => {
+                            const floorId = `${nodeId}-${floor}`;
+                            newVisibleNodes.add(floorId);
+                        });
+                    } else if (nodeId.includes('Floor')) {
+                        const [buildingName, floorName] = nodeId.split('-');
+                        buildingData[buildingName].rooms[floorName].forEach((room) => {
+                            const roomId = `${nodeId}-${room}`;
+                            newVisibleNodes.add(roomId);
+                        });
+                    }
+                }
             }
+    
             return newVisibleNodes;
         });
-
-        if (nodeId.includes('Room')) {
-            setSelectedRoom(nodeId);
-        }
     };
 
     const submitSelection = () => {
@@ -312,24 +287,116 @@ const Pano = () => {
     const graphConfig = {
         node: {
             color: '#60269e',
-            size: 300,
+            size: 5000,
             fontColor: 'white',
             fontSize: 12,
-            labelProperty: 'id',
+            fontWeight: 'bold',
+            labelProperty: 'label',
+            renderLabel: true,
+            labelPosition: 'center',
+            wrapLabel: true,
+            nodeSvgShape: {
+                shape: 'ellipse',
+                shapeProps: {
+                    rx: 120,
+                    ry: 40,
+                    fill: '#60269e',
+                    stroke: '#60269e',
+                },
+            },
         },
-        link: { highlightColor: 'lightblue' },
+        link: {
+            highlightColor: 'lightblue',
+            strokeWidth: 2,
+        },
         directed: true,
         height: 700,
-        width: 1000,
+        width: 1200,
         panAndZoom: true,
         staticGraph: false,
-        d3: {
-            gravity: -300,
-            linkLength: 250,
-            alphaTarget: 0,
-        },
         maxZoom: 2,
-        minZoom: 0.5,
+        minZoom: 0.1,
+        d3: {
+            alphaTarget: 0.05,
+            gravity: -200,
+            linkLength: 200,
+            disableLinkForce: true,
+        },
+    };
+
+    const generateGraphData = () => {
+        const nodes = [];
+        const links = [];
+        const levelYPositions = { 0: 100, 1: 250, 2: 450, 3: 550 };
+        const levelNodes = {};
+    
+        // Level 0: Buildings
+        if (visibleNodes.has('Buildings')) {
+            levelNodes[0] = [{ id: 'Buildings', label: 'Buildings', x: 600, y: levelYPositions[0] }];
+            nodes.push({ id: 'Buildings', label: 'Buildings', x: 600, y: levelYPositions[0] });
+        } else {
+            levelNodes[0] = [];
+        }
+    
+        // Level 1: Buildings
+        levelNodes[1] = [];
+        Object.keys(buildingData).forEach((building, index) => {
+            if (visibleNodes.has(building)) {
+                const x = 300 + index * 200;
+                nodes.push({ id: building, label: building, x, y: levelYPositions[1] });
+                links.push({ source: 'Buildings', target: building });
+                levelNodes[1].push({ id: building, x });
+            }
+        });
+    
+        // Level 2: Floors
+        levelNodes[2] = [];
+        Object.keys(buildingData).forEach((building) => {
+            if (visibleNodes.has(building)) {
+                const floors = buildingData[building].floors;
+                const parentNode = levelNodes[1].find(node => node.id === building);
+                floors.forEach((floor, floorIndex) => {
+                    const nodeId = `${building}-${floor}`;
+                    if (visibleNodes.has(nodeId)) {
+                        const x = parentNode.x + floorIndex * 200 - (floors.length - 1) * 100;
+                        nodes.push({
+                            id: nodeId,
+                            label: floor,
+                            x,
+                            y: levelYPositions[2]
+                        });
+                        links.push({ source: building, target: nodeId });
+                        levelNodes[2].push({ id: nodeId, x });
+                    }
+                });
+            }
+        });
+    
+        // Level 3: Rooms
+        Object.keys(buildingData).forEach((building) => {
+            buildingData[building].floors.forEach((floor) => {
+                const floorNodeId = `${building}-${floor}`;
+                if (visibleNodes.has(floorNodeId)) {
+                    const rooms = buildingData[building].rooms[floor];
+                    const parentNode = levelNodes[2].find(node => node.id === floorNodeId);
+                    rooms.forEach((room, roomIndex) => {
+                        const roomNodeId = `${floorNodeId}-${room}`;
+                        if (visibleNodes.has(roomNodeId)) {
+                            const x = parentNode.x + roomIndex * 150 - (rooms.length - 1) * 75;
+                            nodes.push({
+                                id: roomNodeId,
+                                label: room,
+                                x,
+                                y: levelYPositions[3]
+                            });
+                            links.push({ source: floorNodeId, target: roomNodeId });
+                        }
+                    });
+                }
+            });
+        });
+    
+        return { nodes, links };
     };
 
     return (
@@ -418,7 +485,7 @@ const Pano = () => {
                     </div>
 
                     {isGraphModalVisible && (
-                        <div className="modal-overlay" onClick={closeModal} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div className="modal-overlay" onClick={closeModal} style={{}}>
                             <div className="modal-content" style={{
                                 width: '80%',
                                 maxHeight: '80%',
