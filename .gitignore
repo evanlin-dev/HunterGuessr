@@ -23,3 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Ignore Visual Studio temporary files, build results, and
+# user-specific files
+.vs/
+*.db
+*.db-shm
+*.db-wal
+slnx.sqlite

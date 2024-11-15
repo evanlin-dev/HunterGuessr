@@ -50,7 +50,7 @@ const rows = [
 ];
 
 //sort rows by highest score and set their 'id' to their place in the leaderboard
-const setRows = (rows) => {
+const sortRows = (rows) => {
     const sortedRows = rows.sort((a, b) => b.score - a.score);
     return sortedRows.map((row, index) => ({ ...row, id: index + 1 }));
 }
@@ -74,7 +74,7 @@ const Leaderboard = () => {
             <h2>Leaderboard</h2>
             <div className="data-table">
                 <DataGrid
-                    rows={setRows(rows)}
+                    rows={sortRows(rows)}
                     columns={columns}
                     initialState={{
                         pagination: {
@@ -88,23 +88,17 @@ const Leaderboard = () => {
                     disableColumnSelector
                     disableCellFocusOutline
                     sx={{
-                        '& .MuiDataGrid-columnHeaders': {
-                            backgroundColor: '#f0f0f0', // Header background color
-                            color: '#333', // Header text color
-                            fontSize: '16px',
-                        },
+                        backgroundColor: '#f0f0f0', // Header background color
+                        color: '#333', // Header text color
+                        fontSize: '16px',
                         '& .MuiDataGrid-row': {
                             backgroundColor: '#fff', // Row background color
                             '&:nth-of-type(odd)': {
                                 backgroundColor: '#f9f9f9', // Alternate row color
                             },
                         },
-                        '& .MuiDataGrid-cell': {
-                            fontSize: '14px',
-                            color: '#555', // Cell text color
-                        },
                         '& .MuiDataGrid-selectedRowCount': {
-                            color: 'blue', // Footer row count text color
+                            color: '#f0f0f0', // Footer row count text color
                         },
                         '& .MuiTablePagination-root': {
                             backgroundColor: '#f0f0f0', // Header background color
