@@ -246,33 +246,23 @@ const Pano = () => {
         setVisibleNodes((prevVisibleNodes) => {
             const newVisibleNodes = new Set(prevVisibleNodes);
     
-            if (nodeId.includes('Room')) {
+            if (nodeId.includes('Floor')) {
+                const [buildingName, floorName] = nodeId.split('-');
+                buildingData[buildingName].rooms[floorName].forEach((room) => {
+                    const roomId = `${nodeId}-${room}`;
+                    newVisibleNodes.add(roomId);
+                });
+            } if (nodeId.includes('Buildings')) {
+                Object.keys(buildingData).forEach((building) => {
+                    newVisibleNodes.add(building);
+                });
+            } if (Object.keys(buildingData).includes(nodeId)) {
+                buildingData[nodeId].floors.forEach((floor) => {
+                    const floorId = `${nodeId}-${floor}`;
+                    newVisibleNodes.add(floorId);
+                });
+            } if (nodeId.split('-').length === 3) {
                 setSelectedRoom(nodeId);
-            } else {
-                const isExpanded = Array.from(newVisibleNodes).some((n) => n.startsWith(`${nodeId}-`));
-                if (isExpanded) {
-                    const nodesToRemove = Array.from(newVisibleNodes).filter((n) =>
-                        n.startsWith(`${nodeId}-`)
-                    );
-                    nodesToRemove.forEach((n) => newVisibleNodes.delete(n));
-                } else {
-                    if (nodeId === 'Buildings') {
-                        Object.keys(buildingData).forEach((building) => {
-                            newVisibleNodes.add(building);
-                        });
-                    } else if (Object.keys(buildingData).includes(nodeId)) {
-                        buildingData[nodeId].floors.forEach((floor) => {
-                            const floorId = `${nodeId}-${floor}`;
-                            newVisibleNodes.add(floorId);
-                        });
-                    } else if (nodeId.includes('Floor')) {
-                        const [buildingName, floorName] = nodeId.split('-');
-                        buildingData[buildingName].rooms[floorName].forEach((room) => {
-                            const roomId = `${nodeId}-${room}`;
-                            newVisibleNodes.add(roomId);
-                        });
-                    }
-                }
             }
     
             return newVisibleNodes;
@@ -349,71 +339,47 @@ const Pano = () => {
         const nodes = [];
         const links = [];
         const levelYPositions = { 0: 100, 1: 250, 2: 450, 3: 550 };
-        const levelNodes = {};
     
-        // Level 0: Buildings
+        // Buildings
         if (visibleNodes.has('Buildings')) {
-            levelNodes[0] = [{ id: 'Buildings', label: 'Buildings', x: 600, y: levelYPositions[0] }];
             nodes.push({ id: 'Buildings', label: 'Buildings', x: 600, y: levelYPositions[0] });
-        } else {
-            levelNodes[0] = [];
         }
     
-        // Level 1: Buildings
-        levelNodes[1] = [];
+        // Add Building Nodes
         Object.keys(buildingData).forEach((building, index) => {
             if (visibleNodes.has(building)) {
                 const x = 300 + index * 200;
                 nodes.push({ id: building, label: building, x, y: levelYPositions[1] });
                 links.push({ source: 'Buildings', target: building });
-                levelNodes[1].push({ id: building, x });
             }
         });
     
-        // Level 2: Floors
-        levelNodes[2] = [];
+        // Add Floor Nodes
         Object.keys(buildingData).forEach((building) => {
-            if (visibleNodes.has(building)) {
-                const floors = buildingData[building].floors;
-                const parentNode = levelNodes[1].find(node => node.id === building);
-                floors.forEach((floor, floorIndex) => {
-                    const nodeId = `${building}-${floor}`;
-                    if (visibleNodes.has(nodeId)) {
-                        const x = parentNode.x + floorIndex * 200 - (floors.length - 1) * 100;
-                        nodes.push({
-                            id: nodeId,
-                            label: floor,
-                            x,
-                            y: levelYPositions[2]
-                        });
-                        links.push({ source: building, target: nodeId });
-                        levelNodes[2].push({ id: nodeId, x });
-                    }
-                });
-            }
+            const buildingNode = nodes.find((node) => node.id === building);
+            buildingData[building].floors.forEach((floor, index) => {
+                const floorId = `${building}-${floor}`;
+                if (visibleNodes.has(floorId)) {
+                    const x = buildingNode.x + index * 200 - (buildingData[building].floors.length - 1) * 100;
+                    nodes.push({ id: floorId, label: floor, x, y: levelYPositions[2] });
+                    links.push({ source: building, target: floorId });
+                }
+            });
         });
     
-        // Level 3: Rooms
+        // Add Room Nodes
         Object.keys(buildingData).forEach((building) => {
             buildingData[building].floors.forEach((floor) => {
-                const floorNodeId = `${building}-${floor}`;
-                if (visibleNodes.has(floorNodeId)) {
-                    const rooms = buildingData[building].rooms[floor];
-                    const parentNode = levelNodes[2].find(node => node.id === floorNodeId);
-                    rooms.forEach((room, roomIndex) => {
-                        const roomNodeId = `${floorNodeId}-${room}`;
-                        if (visibleNodes.has(roomNodeId)) {
-                            const x = parentNode.x + roomIndex * 150 - (rooms.length - 1) * 75;
-                            nodes.push({
-                                id: roomNodeId,
-                                label: room,
-                                x,
-                                y: levelYPositions[3]
-                            });
-                            links.push({ source: floorNodeId, target: roomNodeId });
-                        }
-                    });
-                }
+                const floorId = `${building}-${floor}`;
+                const floorNode = nodes.find((node) => node.id === floorId);
+                buildingData[building].rooms[floor].forEach((room, index) => {
+                    const roomId = `${floorId}-${room}`;
+                    if (visibleNodes.has(roomId)) {
+                        const x = floorNode.x + index * 150 - (buildingData[building].rooms[floor].length - 1) * 75;
+                        nodes.push({ id: roomId, label: room, x, y: levelYPositions[3] });
+                        links.push({ source: floorId, target: roomId });
+                    }
+                });
             });
         });
     
