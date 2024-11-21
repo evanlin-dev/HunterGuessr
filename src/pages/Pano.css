@@ -184,6 +184,10 @@ h3 {
     justify-content: center;
 }
 
+.guess-img-container {
+    background: black;
+}
+
 .getRandomImageButton {
     padding: 8px 12px;
     font-size: 0.9rem;

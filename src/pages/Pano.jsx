@@ -13,9 +13,11 @@ const Pano = () => {
     const [elapsedTime, setElapsedTime] = useState(0);
     const originalLocation = { x: 50, y: 50 };
     const [userLocation, setUserLocation] = useState({ x: null, y: null });
-    const [score, setScore] = useState(0);
-    const [round, setRound] = useState(-1);
+    const [score, setScore] = useState(100); // Initial score is 100
+    const [round, setRound] = useState(0); // Initial round is 0
     const [isFloorplanVisible, setIsFloorplanVisible] = useState(true);
+
+    const [guessBool, setGuessBool] = useState(false); // bool for score calculation, true if guess is correct, false if guess is wrong
 
     const [buildings, setBuildings] = useState([]);
     const [floors, setFloors] = useState([]);
@@ -278,10 +280,72 @@ const Pano = () => {
         }
     };
 
+    // Increment round funct, score carries over to next round based on guessBool
     const incrementRound = () => {
         // Increment round
-        setScore(0); // Reset score on new round
-        setRound(prevRound => prevRound + 1); // Increment round by 1)
+        setRound(prevRound => prevRound + 1);
+        // Reset score on new round
+        if (guessBool) {
+            setScore(prevScore => prevScore + 100);
+        } else {
+            setScore(prevScore => prevScore);
+        }
+
+        // Reset guessBool on new round
+        setGuessBool(false);
+    }
+
+    // Guess is Wrong funct, TODO: Implement this
+    const wrongGuess = () => {
+        // Decrement score depending on how close the guess is, WRONG BUILDING: -50, WRONG FLOOR: -25, WRONG ROOM: -10
+        if (selectedBuilding !== 'West Building') {
+            setScore(prevScore => prevScore - 50);
+            showModal('Incorrect Building');
+        } else if (selectedFloor !== 'Floor 1') {
+            setScore(prevScore => prevScore - 25);
+            showModal('Incorrect Floor');
+        } else if (selectedRoom !== 'West Room 101') {
+            setScore(prevScore => prevScore - 10);
+            showModal('Incorrect Room');
+        }
+
+        setGuessBool(false);
+    }
+
+    // Guess is Correct funct, TODO: Implement this
+    const correctGuess = () => {
+        // Increment score by 100
+        setGuessBool(true);
+        showModal('Correct Guess! Move on to the Next Image to recieve points!');
+    }
+
+    // Guess button click
+    const guessClick = () => {
+        // Check if all fields are selected
+        if (selectedBuilding === '') {
+            showModal('Please select a building, floor, and a room.');
+            return;
+        } else if (selectedFloor === '') {
+            showModal('Select a floor, and a room.');
+            return;
+        } else if (selectedRoom === '') {
+            showModal('SELECT A ROOM!');
+            return;
+        } else {
+            // JUST PLACEHOLDER FOR NOW
+            // Check if guess is correct
+            if (selectedBuilding === 'West Building' && selectedFloor === 'Floor 1' && selectedRoom === 'W101') {
+                correctGuess();
+            } else if (selectedBuilding === 'West Building') {
+                if (selectedFloor !== 'Floor 1') {
+                    wrongGuess();
+                } else if (selectedRoom !== 'W101') {
+                    wrongGuess();
+                }
+            } else {
+                wrongGuess();
+            }
+        }
     }
 
     // save data for match hist - on next image click
@@ -454,6 +518,15 @@ const Pano = () => {
                         aria-label="Load the next random image"
                     >
                         Next Image
+                    </button>
+                </div>
+                <div className='next-img-container'>
+                    <button
+                        className='guess-img-container'
+                        onClick={guessClick}
+                        aria-label="Take a guess at the location?"
+                    >
+                        Guess?
                     </button>
                 </div>
                 <div>
