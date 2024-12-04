@@ -486,7 +486,7 @@ const Pano = () => {
             )}
 
             <div className='bottom-right-container'>
-                <div className='dropdown-container'>
+                {/* <div className='dropdown-container'>
                     <div className='dropdowns'>
                         <select value={selectedBuilding} onChange={handleBuildingChange}>
                             <option value="" disabled>Select Building</option>
@@ -509,7 +509,7 @@ const Pano = () => {
                             ))}
                         </select>
                     </div>
-                </div>
+                </div> */}
 
                 <div className='next-img-container'>
                     <button
