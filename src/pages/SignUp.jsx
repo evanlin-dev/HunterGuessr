@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase'; 
+import axios from 'axios';
+
 import {
   Box,
   Button,
@@ -27,6 +29,16 @@ const SignUp = () => {
       await createUserWithEmailAndPassword(auth, email, password);
       alert('Account created successfully!');
       navigate('/login');
+
+      const data = { 
+        username: username,
+        email: email,
+      };
+
+      await axios.post('https://hunterguessr-6d520ba70010.herokuapp.com/insert_login', data);
+        console.log
+        ('Login details saved to separate database.');
+
     } catch (error) {
       console.error(error);
       alert(error.message);

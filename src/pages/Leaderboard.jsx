@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Leaderboard.css';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
+import LoadingAnimation from '../components/LoadingAnimation/LoadingAnimation';
 
 const columns = [
     {
@@ -23,8 +24,6 @@ const columns = [
         headerAlign: 'center',
         width: 150,
         editable: false,
-        //type: 'number',
-
     },
     {
         field: 'score',
@@ -34,7 +33,6 @@ const columns = [
         editable: false,
     },
 ];
-
 
 // Sample data, DELETE AND ADD LOGIC WHEN DB IS CONNECTED
 const rows = [
@@ -49,71 +47,82 @@ const rows = [
     { id: 9, time: '99:99:99', username: 'Yamcha', score: 1 },
 ];
 
-//sort rows by highest score and set their 'id' to their place in the leaderboard
+// Sort rows by highest score and set their 'id' to their place in the leaderboard
 const sortRows = (rows) => {
     const sortedRows = rows.sort((a, b) => b.score - a.score);
     return sortedRows.map((row, index) => ({ ...row, id: index + 1 }));
-}
-
+};
 
 const Leaderboard = () => {
-    const [players, setPlayers] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch leaderboard data
-        /*fetch('https://your-backend-url/api/leaderboard')
-            .then((response) => response.json())
-            .then((data) => setPlayers(data))
-            .catch((error) => console.error("Error fetching data:", error));
-            */
+        // Simulate a loading delay
+        const timer = setTimeout(() => {
+            setLoading(false); // Set loading to false after 3 seconds
+        }, 3000);
+
+        return () => clearTimeout(timer); // Cleanup timer on component unmount
     }, []);
 
     return (
-        <div style={{marginTop:'5em'}}>
-            <h2>Leaderboard</h2>
-            <div className="data-table">
-                <DataGrid
-                    rows={sortRows(rows)}
-                    columns={columns}
-                    initialState={{
-                        pagination: {
-                            paginationModel: {
-                                pageSize: 5,
-                            },
-                        },
-                    }}
-                    pageSizeOptions={[5]}
-                    disableSelectionOnClick 
-                    disableColumnSelector
-                    disableCellFocusOutline
-                    sx={{
-                        backgroundColor: '#f0f0f0', // Header background color
-                        color: '#333', // Header text color
-                        fontSize: '16px',
-                        '& .MuiDataGrid-row': {
-                            backgroundColor: '#fff', // Row background color
-                            '&:nth-of-type(odd)': {
-                                backgroundColor: '#f9f9f9', // Alternate row color
-                            },
-                        },
-                        '& .MuiDataGrid-selectedRowCount': {
-                            color: '#f0f0f0', // Footer row count text color
-                        },
-                        '& .MuiTablePagination-root': {
-                            backgroundColor: '#f0f0f0', // Header background color
-                            color: '#333', // Header text color
-                        },
-                        '& .MuiDataGrid-cell:hover': {
-                            backgroundColor: '#fff', // Row background color
-                            '&:nth-of-type(odd)': {
-                                backgroundColor: 'inherit',
-                            },
-                        },
-                    }}
-                />
-            </div>
-            <button type="main-page-button" onClick={() => navigate('/')}>Back to Main Page</button>
+        <div style={{ marginTop: '5em' }}>
+            {loading ? (
+                // Display Loading Animation while loading is true
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                    <LoadingAnimation />
+                </div>
+            ) : (
+                // Display Leaderboard content when loading is false
+                <>
+                    <h2>Leaderboard</h2>
+                    <div className="data-table">
+                        <DataGrid
+                            rows={sortRows(rows)}
+                            columns={columns}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: {
+                                        pageSize: 5,
+                                    },
+                                },
+                            }}
+                            pageSizeOptions={[5]}
+                            disableSelectionOnClick
+                            disableColumnSelector
+                            disableCellFocusOutline
+                            sx={{
+                                backgroundColor: '#f0f0f0', // Header background color
+                                color: '#333', // Header text color
+                                fontSize: '16px',
+                                '& .MuiDataGrid-row': {
+                                    backgroundColor: '#fff', // Row background color
+                                    '&:nth-of-type(odd)': {
+                                        backgroundColor: '#f9f9f9', // Alternate row color
+                                    },
+                                },
+                                '& .MuiDataGrid-selectedRowCount': {
+                                    color: '#f0f0f0', // Footer row count text color
+                                },
+                                '& .MuiTablePagination-root': {
+                                    backgroundColor: '#f0f0f0', // Header background color
+                                    color: '#333', // Header text color
+                                },
+                                '& .MuiDataGrid-cell:hover': {
+                                    backgroundColor: '#fff', // Row background color
+                                    '&:nth-of-type(odd)': {
+                                        backgroundColor: 'inherit',
+                                    },
+                                },
+                            }}
+                        />
+                    </div>
+                    <button type="main-page-button" onClick={() => navigate('/')}>
+                        Back to Main Page
+                    </button>
+                </>
+            )}
         </div>
     );
 };
