@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactPannellum, { addScene, loadScene } from "react-pannellum";
 import axios from 'axios';
 import './Pano.css';
-import floorPlan from '../assets/images/floorplan7.png';
-import pinpointLocation from '../assets/images/PinpointLocation.png';
 import { Graph } from 'react-d3-graph';
 
 const Pano = () => {
@@ -15,9 +13,11 @@ const Pano = () => {
     const [elapsedTime, setElapsedTime] = useState(0);
     const originalLocation = { x: 50, y: 50 };
     const [userLocation, setUserLocation] = useState({ x: null, y: null });
-    const [score, setScore] = useState(0);
-    const [round, setRound] = useState(-1);
+    const [score, setScore] = useState(100); // Initial score is 100
+    const [round, setRound] = useState(0); // Initial round is 0
     const [isFloorplanVisible, setIsFloorplanVisible] = useState(true);
+
+    const [guessBool, setGuessBool] = useState(false); // bool for score calculation, true if guess is correct, false if guess is wrong
 
     const [buildings, setBuildings] = useState([]);
     const [floors, setFloors] = useState([]);
@@ -135,36 +135,36 @@ const Pano = () => {
         'West Building': {
             floors: ['Floor 1', 'Floor 2', 'Floor 3'],
             rooms: {
-                'Floor 1': ['West Room 101', 'West Room 102', 'West Room 103'],
-                'Floor 2': ['West Room 201', 'West Room 202', 'West Room 203'],
-                'Floor 3': ['West Room 301', 'West Room 302', 'West Room 303'],
+                'Floor 1': ['W101', 'W102', 'W103'],
+                'Floor 2': ['W201', 'W202', 'W203'],
+                'Floor 3': ['W301', 'W302', 'W303'],
             }
         },
         'North Building': {
             floors: ['Floor 1', 'Floor 2', 'Floor 3'],
             rooms: {
-                'Floor 1': ['North Room 101', 'North Room 102', 'North Room 103'],
-                'Floor 2': ['North Room 201', 'North Room 202', 'North Room 203'],
-                'Floor 3': ['North Room 301', 'North Room 302', 'North Room 303'],
+                'Floor 1': ['N101', 'N102', 'N103'],
+                'Floor 2': ['N201', 'N202', 'N203'],
+                'Floor 3': ['N301', 'N302', 'N303'],
             }
         },
         'East Building': {
             floors: ['Floor 1', 'Floor 2', 'Floor 3'],
             rooms: {
-                'Floor 1': ['East Room 101', 'East Room 102', 'East Room 103'],
-                'Floor 2': ['East Room 201', 'East Room 202', 'East Room 203'],
-                'Floor 3': ['East Room 301', 'East Room 302', 'East Room 303'],
+                'Floor 1': ['E101', 'E102', 'E103'],
+                'Floor 2': ['E201', 'E202', 'E203'],
+                'Floor 3': ['E301', 'E302', 'E303'],
             }
         },
         'Thomas Hunter': {
             floors: ['Floor 1', 'Floor 2', 'Floor 3'],
             rooms: {
-                'Floor 1': ['Hunter Room 101', 'Hunter Room 102', 'Hunter Room 103'],
-                'Floor 2': ['Hunter Room 201', 'Hunter Room 202', 'Hunter Room 203'],
-                'Floor 3': ['Hunter Room 301', 'Hunter Room 302', 'Hunter Room 303'],
+                'Floor 1': ['T101', 'T102', 'T103'],
+                'Floor 2': ['T201', 'T202', 'T203'],
+                'Floor 3': ['T301', 'T302', 'T303'],
             }
         }
-    };
+    };    
 
     useEffect(() => {
         fetchRandomImage();
@@ -234,74 +234,41 @@ const Pano = () => {
         }
     }, [isGraphModalVisible, visibleNodes]);
 
-    const generateGraphData = () => {
-        const nodes = [
-            { id: 'Buildings', symbolType: 'circle' },
-            ...Object.keys(buildingData)
-                .filter(building => visibleNodes.has('Buildings'))
-                .map(building => ({ id: building })),
-            ...Object.keys(buildingData).flatMap(building =>
-                buildingData[building].floors
-                    .filter(floor => visibleNodes.has(building))
-                    .map(floor => ({ id: `${building}-${floor}` }))
-            ),
-            ...Object.keys(buildingData).flatMap(building =>
-                buildingData[building].floors.flatMap(floor =>
-                    buildingData[building].rooms[floor]
-                        .filter(room => visibleNodes.has(`${building}-${floor}`))
-                        .map(room => ({ id: `${building}-${floor}-${room}` }))
-                )
-            ),
-        ];
-
-        const links = [
-            ...Object.keys(buildingData)
-                .filter(building => visibleNodes.has('Buildings'))
-                .map(building => ({ source: 'Buildings', target: building })),
-            ...Object.keys(buildingData).flatMap(building =>
-                buildingData[building].floors
-                    .filter(floor => visibleNodes.has(building))
-                    .map(floor => ({ source: building, target: `${building}-${floor}` }))
-            ),
-            ...Object.keys(buildingData).flatMap(building =>
-                buildingData[building].floors.flatMap(floor =>
-                    buildingData[building].rooms[floor]
-                        .filter(room => visibleNodes.has(`${building}-${floor}`))
-                        .map(room => ({
-                            source: `${building}-${floor}`,
-                            target: `${building}-${floor}-${room}`
-                        }))
-                )
-            ),
-        ];
-
-        return { nodes, links };
-    };
-
     const toggleGraphModal = () => {
         setIsGraphModalVisible(prev => !prev);
     };
 
     const closeModal = (e) => {
-        if (e.target.className === "modal-overlay") {
+        if (e.target === e.currentTarget) {
             setIsGraphModalVisible(false);
         }
     };
 
     const handleNodeClick = (nodeId) => {
-        setVisibleNodes(prevVisibleNodes => {
+        setVisibleNodes((prevVisibleNodes) => {
             const newVisibleNodes = new Set(prevVisibleNodes);
-            if (newVisibleNodes.has(nodeId)) {
-                newVisibleNodes.delete(nodeId);
-            } else {
-                newVisibleNodes.add(nodeId);
+    
+            if (nodeId.includes('Floor')) {
+                const [buildingName, floorName] = nodeId.split('-');
+                buildingData[buildingName].rooms[floorName].forEach((room) => {
+                    const roomId = `${nodeId}-${room}`;
+                    newVisibleNodes.add(roomId);
+                });
+            } if (nodeId.includes('Buildings')) {
+                Object.keys(buildingData).forEach((building) => {
+                    newVisibleNodes.add(building);
+                });
+            } if (Object.keys(buildingData).includes(nodeId)) {
+                buildingData[nodeId].floors.forEach((floor) => {
+                    const floorId = `${nodeId}-${floor}`;
+                    newVisibleNodes.add(floorId);
+                });
+            } if (nodeId.split('-').length === 3) {
+                setSelectedRoom(nodeId);
             }
+    
             return newVisibleNodes;
         });
-
-        if (nodeId.includes('Room')) {
-            setSelectedRoom(nodeId);
-        }
     };
 
     const submitSelection = () => {
@@ -313,10 +280,72 @@ const Pano = () => {
         }
     };
 
+    // Increment round funct, score carries over to next round based on guessBool
     const incrementRound = () => {
         // Increment round
-        setScore(0); // Reset score on new round
-        setRound(prevRound => prevRound + 1); // Increment round by 1)
+        setRound(prevRound => prevRound + 1);
+        // Reset score on new round
+        if (guessBool) {
+            setScore(prevScore => prevScore + 100);
+        } else {
+            setScore(prevScore => prevScore);
+        }
+
+        // Reset guessBool on new round
+        setGuessBool(false);
+    }
+
+    // Guess is Wrong funct, TODO: Implement this
+    const wrongGuess = () => {
+        // Decrement score depending on how close the guess is, WRONG BUILDING: -50, WRONG FLOOR: -25, WRONG ROOM: -10
+        if (selectedBuilding !== 'West Building') {
+            setScore(prevScore => prevScore - 50);
+            showModal('Incorrect Building');
+        } else if (selectedFloor !== 'Floor 1') {
+            setScore(prevScore => prevScore - 25);
+            showModal('Incorrect Floor');
+        } else if (selectedRoom !== 'West Room 101') {
+            setScore(prevScore => prevScore - 10);
+            showModal('Incorrect Room');
+        }
+
+        setGuessBool(false);
+    }
+
+    // Guess is Correct funct, TODO: Implement this
+    const correctGuess = () => {
+        // Increment score by 100
+        setGuessBool(true);
+        showModal('Correct Guess! Move on to the Next Image to recieve points!');
+    }
+
+    // Guess button click
+    const guessClick = () => {
+        // Check if all fields are selected
+        if (selectedBuilding === '') {
+            showModal('Please select a building, floor, and a room.');
+            return;
+        } else if (selectedFloor === '') {
+            showModal('Select a floor, and a room.');
+            return;
+        } else if (selectedRoom === '') {
+            showModal('SELECT A ROOM!');
+            return;
+        } else {
+            // JUST PLACEHOLDER FOR NOW
+            // Check if guess is correct
+            if (selectedBuilding === 'West Building' && selectedFloor === 'Floor 1' && selectedRoom === 'W101') {
+                correctGuess();
+            } else if (selectedBuilding === 'West Building') {
+                if (selectedFloor !== 'Floor 1') {
+                    wrongGuess();
+                } else if (selectedRoom !== 'W101') {
+                    wrongGuess();
+                }
+            } else {
+                wrongGuess();
+            }
+        }
     }
 
     // save data for match hist - on next image click
@@ -333,24 +362,92 @@ const Pano = () => {
     const graphConfig = {
         node: {
             color: '#60269e',
-            size: 300,
+            size: 5000,
             fontColor: 'white',
             fontSize: 12,
-            labelProperty: 'id',
+            fontWeight: 'bold',
+            labelProperty: 'label',
+            renderLabel: true,
+            labelPosition: 'center',
+            wrapLabel: true,
+            nodeSvgShape: {
+                shape: 'ellipse',
+                shapeProps: {
+                    rx: 120,
+                    ry: 40,
+                    fill: '#60269e',
+                    stroke: '#60269e',
+                },
+            },
         },
-        link: { highlightColor: 'lightblue' },
+        link: {
+            highlightColor: 'lightblue',
+            strokeWidth: 2,
+        },
         directed: true,
         height: 700,
-        width: 1000,
+        width: 1200,
         panAndZoom: true,
         staticGraph: false,
-        d3: {
-            gravity: -300,
-            linkLength: 250,
-            alphaTarget: 0,
-        },
         maxZoom: 2,
-        minZoom: 0.5,
+        minZoom: 0.1,
+        d3: {
+            alphaTarget: 0.05,
+            gravity: -200,
+            linkLength: 200,
+            disableLinkForce: true,
+        },
+    };
+
+    const generateGraphData = () => {
+        const nodes = [];
+        const links = [];
+        const levelYPositions = { 0: 100, 1: 250, 2: 450, 3: 550 };
+    
+        // Buildings
+        if (visibleNodes.has('Buildings')) {
+            nodes.push({ id: 'Buildings', label: 'Buildings', x: 600, y: levelYPositions[0] });
+        }
+    
+        // Add Building Nodes
+        Object.keys(buildingData).forEach((building, index) => {
+            if (visibleNodes.has(building)) {
+                const x = 300 + index * 200;
+                nodes.push({ id: building, label: building, x, y: levelYPositions[1] });
+                links.push({ source: 'Buildings', target: building });
+            }
+        });
+    
+        // Add Floor Nodes
+        Object.keys(buildingData).forEach((building) => {
+            const buildingNode = nodes.find((node) => node.id === building);
+            buildingData[building].floors.forEach((floor, index) => {
+                const floorId = `${building}-${floor}`;
+                if (visibleNodes.has(floorId)) {
+                    const x = buildingNode.x + index * 200 - (buildingData[building].floors.length - 1) * 100;
+                    nodes.push({ id: floorId, label: floor, x, y: levelYPositions[2] });
+                    links.push({ source: building, target: floorId });
+                }
+            });
+        });
+    
+        // Add Room Nodes
+        Object.keys(buildingData).forEach((building) => {
+            buildingData[building].floors.forEach((floor) => {
+                const floorId = `${building}-${floor}`;
+                const floorNode = nodes.find((node) => node.id === floorId);
+                buildingData[building].rooms[floor].forEach((room, index) => {
+                    const roomId = `${floorId}-${room}`;
+                    if (visibleNodes.has(roomId)) {
+                        const x = floorNode.x + index * 150 - (buildingData[building].rooms[floor].length - 1) * 75;
+                        nodes.push({ id: roomId, label: room, x, y: levelYPositions[3] });
+                        links.push({ source: floorId, target: roomId });
+                    }
+                });
+            });
+        });
+    
+        return { nodes, links };
     };
 
     return (
@@ -389,7 +486,7 @@ const Pano = () => {
             )}
 
             <div className='bottom-right-container'>
-                <div className='dropdown-container'>
+                {/* <div className='dropdown-container'>
                     <div className='dropdowns'>
                         <select value={selectedBuilding} onChange={handleBuildingChange}>
                             <option value="" disabled>Select Building</option>
@@ -412,7 +509,7 @@ const Pano = () => {
                             ))}
                         </select>
                     </div>
-                </div>
+                </div> */}
 
                 <div className='next-img-container'>
                     <button
@@ -421,6 +518,15 @@ const Pano = () => {
                         aria-label="Load the next random image"
                     >
                         Next Image
+                    </button>
+                </div>
+                <div className='next-img-container'>
+                    <button
+                        className='guess-img-container'
+                        onClick={guessClick}
+                        aria-label="Take a guess at the location?"
+                    >
+                        Guess?
                     </button>
                 </div>
                 <div>
@@ -439,7 +545,7 @@ const Pano = () => {
                     </div>
 
                     {isGraphModalVisible && (
-                        <div className="modal-overlay" onClick={closeModal} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div className="modal-overlay" onClick={closeModal} style={{}}>
                             <div className="modal-content" style={{
                                 width: '80%',
                                 maxHeight: '80%',
