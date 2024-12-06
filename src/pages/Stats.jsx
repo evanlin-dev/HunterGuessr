@@ -17,6 +17,8 @@ import {
 } from 'chart.js';
 import { Box, Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import LoadingAnimation from '../components/LoadingAnimation/LoadingAnimation'; // Import LoadingAnimation
+
 
 ChartJS.register(
   CategoryScale,
@@ -32,6 +34,7 @@ ChartJS.register(
 
 const Stats = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+   const [loading, setLoading] = useState(true); // Add loading state
   const theme = useTheme();
 
   useEffect(() => {
@@ -44,6 +47,14 @@ const Stats = () => {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false); // Set loading to false after 3 seconds
+    }, 3000); // Adjust the time as necessary
+
+    return () => clearTimeout(timer); // Cleanup timer on component unmount
   }, []);
 
   if (!isLoggedIn) {
@@ -297,6 +308,9 @@ const Stats = () => {
 
   return (
     <div className="container">
+      {loading ? (
+        <LoadingAnimation /> ): (
+          <>
       <div className="stats-page">
         <div className="stats-wrapper">
           <div className="stats-container">
@@ -320,6 +334,8 @@ const Stats = () => {
           </div>
         </div>
       </div>
+      </>
+        )}
     </div>
   );
 };
