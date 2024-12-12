@@ -12,25 +12,59 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
+import axios from 'axios';
 
 import backgroundImage from '../assets/images/HunterCoverPicture.png';
 
+
 const Login = () => {
   const theme = useTheme();
-  const [email, setEmail] = useState(''); 
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert('Login successful!');
-      navigate('/Pano'); 
-    } catch (error) {
-      console.error(error);
-      alert(error.message);
-    }
+      e.preventDefault();
+      try {
+          // Sign in with Firebase
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          
+          // Get user email and create username from it
+          const userEmail = userCredential.user.email;
+          const username = userEmail.split('@')[0]; // Creates username from email prefix
+          
+          // Store user information in localStorage
+          localStorage.setItem('username', username);
+          localStorage.setItem('userEmail', userEmail);
+          
+          // Verify or create user score record in backend
+          try {
+              const response = await axios.get(`https://hunterguessr-6d520ba70010.herokuapp.com/retrieve_login/${userEmail}`);
+              
+              if (!response.data) {
+                  // If user doesn't exist in backend, create them
+                  await axios.post('https://hunterguessr-6d520ba70010.herokuapp.com/insert_login', {
+                      username: username,
+                      email: userEmail
+                  });
+                  
+                  // Initialize user score
+                  await axios.post('https://hunterguessr-6d520ba70010.herokuapp.com/insert_score', {
+                      username: username,
+                      score: 0
+                  });
+              }
+          } catch (error) {
+              console.error('Error setting up user in backend:', error);
+          }
+
+          alert('Login successful!');
+          navigate('/Pano');
+          
+      } catch (error) {
+          console.error(error);
+          alert(error.message);
+      }
   };
 
   return (

@@ -3,19 +3,26 @@ import ReactPannellum, { addScene, loadScene } from "react-pannellum";
 import axios from 'axios';
 import './Pano.css';
 import { Graph } from 'react-d3-graph';
+import { Flip } from '@mui/icons-material';
 
 const Pano = () => {
     const [sceneId, setSceneId] = useState(0);
     const [selectedImage, setSelectedImage] = useState('');
     const [randomImage, setRandomImage] = useState(null);
     const pannellumRef = useRef();
-
+    const [guessingEnabled, setGuessingEnabled] = useState(true);
+    const [selectedNode, setSelectedNode] = useState(null);
     const [elapsedTime, setElapsedTime] = useState(0);
     const originalLocation = { x: 50, y: 50 };
     const [userLocation, setUserLocation] = useState({ x: null, y: null });
     const [score, setScore] = useState(100); // Initial score is 100
     const [round, setRound] = useState(0); // Initial round is 0
     const [isFloorplanVisible, setIsFloorplanVisible] = useState(true);
+    const [selectedLocationBuilding, setSelectedLocationBuilding] = useState(null);
+    const [selectedLocationFloor, setSelectedLocationFloor] = useState(null);
+    const [selectedLocationRoom, setSelectedLocationRoom] = useState(null);
+
+
 
     const [guessBool, setGuessBool] = useState(false); // bool for score calculation, true if guess is correct, false if guess is wrong
 
@@ -87,25 +94,36 @@ const Pano = () => {
 
     const fetchRandomImage = async () => {
         try {
-            if (usedImageIds.size >= 100) {
-                showModal('Maximum number of images reached.');
+            const res2 = await axios.get('https://hunterguessr-6d520ba70010.herokuapp.com/AmountOfImages');
+            var total = res2.data.count;
+            if (usedImageIds.size >= total) {
+                showModal('Congrats you have completed the game! Please refresh the page to play again.');
                 return;
             }
 
+            
             const response = await axios.get('https://hunterguessr-6d520ba70010.herokuapp.com/GrabImageForGuessing');
             const image = response.data;
-
-            if (image && image.id && image.photo) {
+            console.log(total);
+    
+            if (image && image.id && image.photo && image.file_name) {
                 if (usedImageIds.has(image.id)) {
                     console.log('Image already used');
-                    showModal("You've gone through all the images. Congratulations!");
-                    return;
+                    return fetchRandomImage();
                 }
-
+    
+                // Parse building and floor from file name
+                const fileNameParts = image.file_name.split('_'); // Split by underscores
+                const building = fileNameParts[0]; // First part is the building
+                const floor = fileNameParts[1];    // Second part is the floor
+                const room = fileNameParts.slice(2).join('_').replace('.jpg', ''); // Combine remaining parts for room
+    
+                console.log(`Building: ${building}, Floor: ${floor}, Room: ${room}`);
+    
                 setSelectedImage(`data:image/jpeg;base64,${image.photo}`);
-                setRandomImage(image);
+                setRandomImage({ ...image, building, floor, room }); // Include parsed info in the image state
                 setUsedImageIds(prev => new Set(prev).add(image.id));
-
+    
                 const img = new Image();
                 img.src = `data:image/jpeg;base64,${image.photo}`;
                 img.onload = () => {
@@ -125,46 +143,58 @@ const Pano = () => {
             console.error('Error retrieving random image:', error);
             showModal('Error retrieving image. Please try again.');
         }
-        // save data for match hist - on next image click
-        //saveData();
+    
         setElapsedTime(0); // Reset time on new image
         incrementRound(); // Increment round on new image
     };
 
     const buildingData = {
-        'West Building': {
-            floors: ['Floor 1', 'Floor 2', 'Floor 3'],
+        "east": {
+            floors: ["1", "4", "5", "6", "7"],
             rooms: {
-                'Floor 1': ['W101', 'W102', 'W103'],
-                'Floor 2': ['W201', 'W202', 'W203'],
-                'Floor 3': ['W301', 'W302', 'W303'],
+                "1": ["hallway1", "hallway2"],
+                "4": ["room402"],
+                "5": ["mainarea"],
+                "6": ["lockers", "mainarea", "outletarea", "room620A", "room620B"],
+                "7": ["entrance", "mainarea", "sciencecenter", "writingcenter"]
             }
         },
-        'North Building': {
-            floors: ['Floor 1', 'Floor 2', 'Floor 3'],
+        "north": {
+            floors: ["1", "2", "3", "4", "5", "6", "7", "8", "10"],
             rooms: {
-                'Floor 1': ['N101', 'N102', 'N103'],
-                'Floor 2': ['N201', 'N202', 'N203'],
-                'Floor 3': ['N301', 'N302', 'N303'],
+                "1": ["hallway1", "hallway2", "hallway3", "hallway4", "hallway5", "hallway6", "hallway7"],
+                "2": ["auditorium", "auditorium2", "hallway1", "hallway2", "hallway3", "hallway4", "hallway5"],
+                "3": ["hallway1", "hallway2", "hallway3", "hallway4", "hallway5", "hallway6"],
+                "4": ["hallway1", "hallway2", "hallway3", "hallway4"],
+                "5": ["hallway1", "hallway2", "hallway3", "hallway4", "hallway5", "hallway6"],
+                "6": ["hallway1", "hallway2", "hallway3", "hallway4", "hallway5", "hallway6"],
+                "7": ["hallway1", "hallway2", "hallway3", "hallway4"],
+                "8": ["hallway1", "hallway2", "hallway3", "hallway4"],
+                "10": ["hallway1", "hallway2", "hallway3"]
             }
         },
-        'East Building': {
-            floors: ['Floor 1', 'Floor 2', 'Floor 3'],
+        "thomashunter": {
+            floors: ["1", "2", "3", "4", "5"],
             rooms: {
-                'Floor 1': ['E101', 'E102', 'E103'],
-                'Floor 2': ['E201', 'E202', 'E203'],
-                'Floor 3': ['E301', 'E302', 'E303'],
+                "1": ["hallway", "staircase", "staircase2"],
+                "2": ["hallway1", "hallway2", "hallway3"],
+                "3": ["hallway1", "hallway2", "hallway3"],
+                "4": ["hallway"],
+                "5": ["hallway1", "hallway2"]
             }
         },
-        'Thomas Hunter': {
-            floors: ['Floor 1', 'Floor 2', 'Floor 3'],
+        "west": {
+            floors: ["2", "3", "5", "6", "7"],
             rooms: {
-                'Floor 1': ['T101', 'T102', 'T103'],
-                'Floor 2': ['T201', 'T202', 'T203'],
-                'Floor 3': ['T301', 'T302', 'T303'],
+                "2": ["215", "w217"],
+                "3": ["cafe3", "hallway3", "skybridgeeast3", "skybridgenorth3", "studyarea3", "w309"],
+                "5": ["hallway5", "studyarea5", "w505", "w506", "w507", "w508", "w509", "w522"],
+                "6": ["hallway6", "studyarea6", "w604", "w610", "w611", "w615"],
+                "7": ["hallway7", "skybridge7", "studyarea7", "w706", "w708", "w714"]
             }
         }
-    };    
+    };
+    
 
     useEffect(() => {
         fetchRandomImage();
@@ -245,32 +275,71 @@ const Pano = () => {
     };
 
     const handleNodeClick = (nodeId) => {
-        setVisibleNodes((prevVisibleNodes) => {
-            const newVisibleNodes = new Set(prevVisibleNodes);
-    
-            if (nodeId.includes('Floor')) {
-                const [buildingName, floorName] = nodeId.split('-');
-                buildingData[buildingName].rooms[floorName].forEach((room) => {
-                    const roomId = `${nodeId}-${room}`;
-                    newVisibleNodes.add(roomId);
-                });
-            } if (nodeId.includes('Buildings')) {
-                Object.keys(buildingData).forEach((building) => {
-                    newVisibleNodes.add(building);
-                });
-            } if (Object.keys(buildingData).includes(nodeId)) {
-                buildingData[nodeId].floors.forEach((floor) => {
-                    const floorId = `${nodeId}-${floor}`;
-                    newVisibleNodes.add(floorId);
-                });
-            } if (nodeId.split('-').length === 3) {
-                setSelectedRoom(nodeId);
+        if (!nodeId) return;
+        
+        const [building, floor, room] = nodeId.split('-');
+        
+        // Store selected location when a room is clicked
+        if (room) {
+            setSelectedLocationBuilding(building);
+            setSelectedLocationFloor(floor);
+            setSelectedLocationRoom(room);
+            setSelectedNode(nodeId);
+        }
+        
+        setVisibleNodes(prev => {
+            const newNodes = new Set(prev);
+            
+            // Root "Buildings" node handling
+            if (nodeId === "Buildings") {
+                if (Object.keys(buildingData).some(b => newNodes.has(b))) {
+                    return new Set(['Buildings']); // Collapse all
+                } else {
+                    Object.keys(buildingData).forEach(b => newNodes.add(b)); // Expand all
+                    return newNodes;
+                }
             }
-    
-            return newVisibleNodes;
+            
+            // Building node handling
+            if (buildingData[nodeId]) {
+                const floors = buildingData[nodeId].floors;
+                const hasVisibleFloors = floors.some(f => newNodes.has(`${nodeId}-${f}`));
+                
+                floors.forEach(f => {
+                    const floorId = `${nodeId}-${f}`;
+                    if (hasVisibleFloors) {
+                        // Collapse: remove floor and its rooms
+                        newNodes.delete(floorId);
+                        buildingData[nodeId].rooms[f]?.forEach(r => {
+                            newNodes.delete(`${floorId}-${r}`);
+                        });
+                    } else {
+                        // Expand: show floor
+                        newNodes.add(floorId);
+                    }
+                });
+                return newNodes;
+            }
+            
+            // Floor node handling
+            if (floor && !room) {
+                const rooms = buildingData[building].rooms[floor] || [];
+                const hasVisibleRooms = rooms.some(r => newNodes.has(`${nodeId}-${r}`));
+                
+                rooms.forEach(r => {
+                    const roomId = `${nodeId}-${r}`;
+                    if (hasVisibleRooms) {
+                        newNodes.delete(roomId); // Collapse: remove rooms
+                    } else {
+                        newNodes.add(roomId); // Expand: show rooms
+                    }
+                });
+                return newNodes;
+            }
+            
+            return newNodes;
         });
     };
-
     const submitSelection = () => {
         if (selectedRoom) {
             alert(`Room "${selectedRoom}" selected!`);
@@ -321,32 +390,51 @@ const Pano = () => {
 
     // Guess button click
     const guessClick = () => {
-        // Check if all fields are selected
-        if (selectedBuilding === '') {
-            showModal('Please select a building, floor, and a room.');
+        if (!randomImage || !selectedLocationRoom) {
+            showModal('Please select a specific room first');
             return;
-        } else if (selectedFloor === '') {
-            showModal('Select a floor, and a room.');
-            return;
-        } else if (selectedRoom === '') {
-            showModal('SELECT A ROOM!');
-            return;
-        } else {
-            // JUST PLACEHOLDER FOR NOW
-            // Check if guess is correct
-            if (selectedBuilding === 'West Building' && selectedFloor === 'Floor 1' && selectedRoom === 'W101') {
-                correctGuess();
-            } else if (selectedBuilding === 'West Building') {
-                if (selectedFloor !== 'Floor 1') {
-                    wrongGuess();
-                } else if (selectedRoom !== 'W101') {
-                    wrongGuess();
-                }
-            } else {
-                wrongGuess();
-            }
         }
-    }
+        
+        const correctBuilding = randomImage.building;
+        const correctFloor = randomImage.floor;
+        const correctRoom = randomImage.room;
+        
+        let earnedPoints = 0;
+        let message = '';
+        
+        // Calculate points for correct building (33 points)
+        if (selectedLocationBuilding === correctBuilding) {
+            earnedPoints += 33;
+            message += 'Building: Correct! (+33 points)\n';
+        } else {
+            message += 'Building: Incorrect\n';
+        }
+        
+        // Calculate points for correct floor (33 points)
+        if (selectedLocationFloor === correctFloor) {
+            earnedPoints += 33;
+            message += 'Floor: Correct! (+33 points)\n';
+        } else {
+            message += 'Floor: Incorrect\n';
+        }
+        
+        // Calculate points for correct room (34 points)
+        if (selectedLocationRoom === correctRoom) {
+            earnedPoints += 34;
+            message += 'Room: Correct! (+34 points)';
+        } else {
+            message += 'Room: Incorrect';
+        }
+        
+        // Update score and show results
+        setScore(prevScore => prevScore + earnedPoints);
+        showModal(`${message}\n\nTotal points earned: ${earnedPoints}`);
+        fetchRandomImage();
+        if (earnedPoints === 100) {
+            setGuessingEnabled(false);
+        }
+    };
+    
 
     // save data for match hist - on next image click
     /*const saveData = () => {
@@ -358,98 +446,155 @@ const Pano = () => {
         };
         addRow(data);
     };*/
-
     const graphConfig = {
+        directed: true,
+        nodeHighlightBehavior: true,
+        maxZoom: 1.5,
+        minZoom: 0.5,
+        panAndZoom: false,
+        staticGraph: true,
+        height: 800,
+        width: 1400,
         node: {
-            color: '#60269e',
-            size: 5000,
-            fontColor: 'white',
-            fontSize: 12,
-            fontWeight: 'bold',
-            labelProperty: 'label',
+            color: "#0EA5E9",
+            size: 800,
+            highlightStrokeColor: "#8B5CF6",
+            highlightFontSize: 16,
+            highlightFontWeight: "bold",
+            labelPosition: "center",
+            labelProperty: "label",
+            fontSize: 15,
             renderLabel: true,
-            labelPosition: 'center',
-            wrapLabel: true,
-            nodeSvgShape: {
-                shape: 'ellipse',
-                shapeProps: {
-                    rx: 120,
-                    ry: 40,
-                    fill: '#60269e',
-                    stroke: '#60269e',
-                },
-            },
+            symbolType: "circle",
+            strokeWidth: 3,
+            strokeColor: "rgba(255, 255, 255, 0.1)",
+            fontColor: "rgba(255, 255, 255, 0.9)",
+            highlightColor: "#8B5CF6",
+            highlightStrokeWidth: 4
         },
         link: {
-            highlightColor: 'lightblue',
+            color: "rgba(255, 255, 255, 0.1)",
             strokeWidth: 2,
-        },
-        directed: true,
-        height: 700,
-        width: 1200,
-        panAndZoom: true,
-        staticGraph: false,
-        maxZoom: 2,
-        minZoom: 0.1,
-        d3: {
-            alphaTarget: 0.05,
-            gravity: -200,
-            linkLength: 200,
-            disableLinkForce: true,
-        },
+            highlightColor: "rgba(139, 92, 246, 0.5)",
+            type: "STRAIGHT",
+            semanticStrokeWidth: false,
+            renderLabel: false
+        }
     };
-
+    
     const generateGraphData = () => {
         const nodes = [];
         const links = [];
-        const levelYPositions = { 0: 100, 1: 250, 2: 450, 3: 550 };
-    
-        // Buildings
-        if (visibleNodes.has('Buildings')) {
-            nodes.push({ id: 'Buildings', label: 'Buildings', x: 600, y: levelYPositions[0] });
-        }
-    
-        // Add Building Nodes
-        Object.keys(buildingData).forEach((building, index) => {
-            if (visibleNodes.has(building)) {
-                const x = 300 + index * 200;
-                nodes.push({ id: building, label: building, x, y: levelYPositions[1] });
-                links.push({ source: 'Buildings', target: building });
-            }
+        
+        const centerX = 700;
+        const centerY = 330;
+        const buildingRadius = 100;
+        const floorRadius = 130;
+        const roomRadius = 100;
+        
+        // Root node
+        nodes.push({
+            id: "Buildings",
+            label: "Buildings",
+            x: centerX,
+            y: centerY,
+            fx: centerX,
+            fy: centerY
         });
-    
-        // Add Floor Nodes
-        Object.keys(buildingData).forEach((building) => {
-            const buildingNode = nodes.find((node) => node.id === building);
-            buildingData[building].floors.forEach((floor, index) => {
-                const floorId = `${building}-${floor}`;
-                if (visibleNodes.has(floorId)) {
-                    const x = buildingNode.x + index * 200 - (buildingData[building].floors.length - 1) * 100;
-                    nodes.push({ id: floorId, label: floor, x, y: levelYPositions[2] });
-                    links.push({ source: building, target: floorId });
-                }
+        
+        const buildings = Object.keys(buildingData);
+        const buildingAngleStep = (2 * Math.PI) / buildings.length;
+        
+        buildings.forEach((building, index) => {
+            const buildingAngle = buildingAngleStep * index - Math.PI / 2;
+            const buildingX = centerX + buildingRadius * Math.cos(buildingAngle);
+            const buildingY = centerY + buildingRadius * Math.sin(buildingAngle);
+            
+            nodes.push({
+                id: building,
+                label: building,
+                x: buildingX,
+                y: buildingY,
+                fx: buildingX,
+                fy: buildingY
             });
-        });
-    
-        // Add Room Nodes
-        Object.keys(buildingData).forEach((building) => {
-            buildingData[building].floors.forEach((floor) => {
-                const floorId = `${building}-${floor}`;
-                const floorNode = nodes.find((node) => node.id === floorId);
-                buildingData[building].rooms[floor].forEach((room, index) => {
-                    const roomId = `${floorId}-${room}`;
-                    if (visibleNodes.has(roomId)) {
-                        const x = floorNode.x + index * 150 - (buildingData[building].rooms[floor].length - 1) * 75;
-                        nodes.push({ id: roomId, label: room, x, y: levelYPositions[3] });
-                        links.push({ source: floorId, target: roomId });
+            links.push({ source: "Buildings", target: building });
+            
+            if (visibleNodes.has(building)) {
+                const floors = buildingData[building].floors;
+                const floorAngleStep = Math.PI / (floors.length + 1);
+                
+                floors.forEach((floor, floorIndex) => {
+                    const floorId = `${building}-${floor}`;
+                    if (visibleNodes.has(floorId)) {
+                        const floorAngle = buildingAngle - Math.PI/4 + floorAngleStep * (floorIndex + 1);
+                        const floorX = buildingX + floorRadius * Math.cos(floorAngle);
+                        const floorY = buildingY + floorRadius * Math.sin(floorAngle);
+                        
+                        nodes.push({
+                            id: floorId,
+                            label: `Floor ${floor}`,
+                            x: floorX,
+                            y: floorY,
+                            fx: floorX,
+                            fy: floorY
+                        });
+                        links.push({ source: building, target: floorId });
+                        
+                        const rooms = buildingData[building].rooms[floor] || [];
+                        const visibleRooms = rooms.filter(r => visibleNodes.has(`${floorId}-${r}`));
+                        const roomAngleStep = Math.PI / (visibleRooms.length + 1);
+                        
+                        visibleRooms.forEach((room, roomIndex) => {
+                            if(building != 'east') {
+                            const roomId = `${floorId}-${room}`;
+                            const roomAngle = floorAngle - Math.PI/6 + roomAngleStep * (roomIndex + 1);
+                            const roomX = floorX + roomRadius * Math.cos(roomAngle);
+                            const roomY = floorY + roomRadius * Math.sin(roomAngle);
+                            
+                            nodes.push({
+                                id: roomId,
+                                label: room,
+                                x: roomX,
+                                y: roomY,
+                                fx: roomX,
+                                fy: roomY
+                            });
+                            links.push({ source: floorId, target: roomId });
+                        }
+                        else{
+                            const roomId = `${floorId}-${room}`;
+                            const roomAngle = floorAngle - Math.PI/6 + roomAngleStep * (roomIndex + 1);
+                            const roomX = floorX + roomRadius * Math.sin(roomAngle) + 60;
+                            const roomY = floorY + roomRadius * Math.cos(roomAngle) + 30;
+                            
+                            nodes.push({
+                                id: roomId,
+                                label: room,
+                                x: roomX,
+                                y: roomY,
+                                fx: roomX,
+                                fy: roomY
+                            });
+                            links.push({ source: floorId, target: roomId });
+                        }
+                        });
                     }
                 });
-            });
+            }
         });
-    
+        
         return { nodes, links };
     };
-
+    
+    
+    // Update the useEffect hook
+    useEffect(() => {
+        if (isGraphModalVisible) {
+            const data = generateGraphData();
+            setGraphData(data);
+        }
+    }, [isGraphModalVisible, visibleNodes]);
     return (
         <div className='page-container'>
             <div className='scoreCounter'>
@@ -467,14 +612,21 @@ const Pano = () => {
                 </div>
             </div>
             <ReactPannellum
-                ref={pannellumRef}
-                id="1"
-                sceneId={`scene-${sceneId}`}
-                style={{ width: "100%", height: "100%" }}
-                imageSource={selectedImage}
-                config={config}
-                equirectangularOptions={equirectangularOptions}
-            />
+    ref={pannellumRef}
+    id="1"
+    sceneId={`scene-${sceneId}`}
+    style={{
+        width: "100%",
+        height: "100%",
+        borderRadius: "10px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+        overflow: "hidden",
+        position: "relative",
+    }}
+    imageSource={selectedImage}
+    config={config}
+    equirectangularOptions={equirectangularOptions}
+/>
 
             {isModalVisible && (
                 <div className="modal-overlay">
@@ -530,15 +682,7 @@ const Pano = () => {
                     </button>
                 </div>
                 <div>
-                    <div style={{
-                        backgroundColor: 'rgba(217, 217, 217, 1)',
-                        borderRadius: '10px',
-                        padding: '10px',
-                        marginTop: '10px',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-                        display: 'flex',
-                        justifyContent: 'center'
-                    }}>
+                    <div>
                         <button onClick={toggleGraphModal} className="openGraphButton">
                             Open Building Map
                         </button>
@@ -555,17 +699,19 @@ const Pano = () => {
                                 position: 'relative',
                             }}>
                                 <button onClick={toggleGraphModal} className="modal-close-button" style={{
-                                    position: 'absolute', top: '10px', right: '10px', color: 'white', fontSize: '20px', background: 'transparent', border: 'none', cursor: 'pointer'
+                                    position: 'absolute', top: '10px', right: '10px', color: 'white', fontSize: '20px', background: 'transparent', border: 'none', cursor: 'pointer', zIndex: '10001'
                                 }}>
                                     &times;
                                 </button>
                                 {graphData && (
-                                    <Graph
-                                        id="buildingGraph"
-                                        data={graphData}
-                                        config={graphConfig}
-                                        onClickNode={handleNodeClick}
-                                    />
+                                     <div className="graph-container">
+                                     <Graph
+                                         id="buildingGraph"
+                                         data={graphData}
+                                         config={graphConfig}
+                                         onClickNode={handleNodeClick}
+                                     />
+                                 </div>
                                 )}
                                 {selectedRoom && (
                                     <div style={{ marginTop: '20px', textAlign: 'center' }}>
