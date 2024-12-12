@@ -92,6 +92,7 @@ const Leaderboard = () => {
                     <h2 className="text-2xl font-bold text-center mb-6">Leaderboard</h2>
                     <div className="tablebox">
                         <DataGrid
+                        
                             rows={leaderboardData}
                             columns={columns}
                             initialState={{
@@ -101,6 +102,11 @@ const Leaderboard = () => {
                                     },
                                 },
                             }}
+                
+                            pageSizeOptions={[10]}
+                            disableSelectionOnClick
+                            disableColumnSelector
+                            className="border-none"
                             sx={{
                                 '& .MuiDataGrid-root': {
                                     backgroundColor: 'white',
@@ -119,10 +125,6 @@ const Leaderboard = () => {
                                     color: 'white',
                                 },
                             }}
-                            pageSizeOptions={[10]}
-                            disableSelectionOnClick
-                            disableColumnSelector
-                            className="border-none"
                         />
                     </div>
                     <div className="text-center mt-6">
