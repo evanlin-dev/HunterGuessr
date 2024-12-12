@@ -5,6 +5,1313 @@ import './Pano.css';
 import { Graph } from 'react-d3-graph';
 import { Flip } from '@mui/icons-material';
 
+const sceneConnections = {
+    // East Building Scenes (no given connections)
+    // East Building Floor 1
+    "east_1_hallway1.jpg": {
+        id: 133,
+        connections: [{
+            target: "east_1_hallway2.jpg",
+            targetId: 134,
+            yaw: 90,
+            pitch: 0,
+            text: "To Hallway 2"
+        }]
+    },
+    "east_1_hallway2.jpg": {
+        id: 134,
+        connections: [{
+            target: "east_1_hallway1.jpg",
+            targetId: 133,
+            yaw: 270,
+            pitch: 0,
+            text: "Back to Hallway 1"
+        }]
+    },
+
+    // East Building Floor 4
+    "east_4_room402.jpg": {
+        id: 135,
+        connections: []  // End of floor connection
+    },
+
+    // East Building Floor 5
+    "east_5_mainarea.jpg": {
+        id: 136,
+        connections: []  // End of floor connection
+    },
+
+    // East Building Floor 6
+    "east_6_lockers.jpg": {
+        id: 137,
+        connections: [
+            {
+                target: "east_6_mainarea.jpg",
+                targetId: 138,
+                yaw: 90,
+                pitch: 0,
+                text: "To Main Area"
+            },
+            {
+                target: "east_6_outletarea.jpg",
+                targetId: 139,
+                yaw: 180,
+                pitch: 0,
+                text: "To Outlet Area"
+            }
+        ]
+    },
+    "east_6_mainarea.jpg": {
+        id: 138,
+        connections: [
+            {
+                target: "east_6_lockers.jpg",
+                targetId: 137,
+                yaw: 270,
+                pitch: 0,
+                text: "To Lockers"
+            },
+            {
+                target: "east_6_room620A.jpg",
+                targetId: 140,
+                yaw: 0,
+                pitch: 0,
+                text: "To Room 620A"
+            },
+            {
+                target: "east_6_room620B.jpg",
+                targetId: 141,
+                yaw: 90,
+                pitch: 0,
+                text: "To Room 620B"
+            }
+        ]
+    },
+    "east_6_outletarea.jpg": {
+        id: 139,
+        connections: [
+            {
+                target: "east_6_mainarea.jpg",
+                targetId: 138,
+                yaw: 0,
+                pitch: 0,
+                text: "To Main Area"
+            },
+            {
+                target: "east_6_lockers.jpg",
+                targetId: 137,
+                yaw: 180,
+                pitch: 0,
+                text: "To Lockers"
+            }
+        ]
+    },
+    "east_6_room620A.jpg": {
+        id: 140,
+        connections: [{
+            target: "east_6_mainarea.jpg",
+            targetId: 138,
+            yaw: 180,
+            pitch: 0,
+            text: "Back to Main Area"
+        }]
+    },
+    "east_6_room620B.jpg": {
+        id: 141,
+        connections: [{
+            target: "east_6_mainarea.jpg",
+            targetId: 138,
+            yaw: 270,
+            pitch: 0,
+            text: "Back to Main Area"
+        }]
+    },
+
+    // East Building Floor 7
+    "east_7_entrance.jpg": {
+        id: 142,
+        connections: [{
+            target: "east_7_mainarea.jpg",
+            targetId: 143,
+            yaw: 90,
+            pitch: 0,
+            text: "To Main Area"
+        }]
+    },
+    "east_7_mainarea.jpg": {
+        id: 143,
+        connections: [
+            {
+                target: "east_7_entrance.jpg",
+                targetId: 142,
+                yaw: 270,
+                pitch: 0,
+                text: "To Entrance"
+            },
+            {
+                target: "east_7_sciencecenter.jpg",
+                targetId: 144,
+                yaw: 90,
+                pitch: 0,
+                text: "To Science Center"
+            },
+            {
+                target: "east_7_writingcenter.jpg",
+                targetId: 145,
+                yaw: 180,
+                pitch: 0,
+                text: "To Writing Center"
+            }
+        ]
+    },
+    "east_7_sciencecenter.jpg": {
+        id: 144,
+        connections: [{
+            target: "east_7_mainarea.jpg",
+            targetId: 143,
+            yaw: 270,
+            pitch: 0,
+            text: "Back to Main Area"
+        }]
+    },
+    "east_7_writingcenter.jpg": {
+        id: 145,
+        connections: [{
+            target: "east_7_mainarea.jpg",
+            targetId: 143,
+            yaw: 0,
+            pitch: 0,
+            text: "Back to Main Area"
+        }]
+    },
+
+
+
+    // North Building Floor 10 (already correct from your initial data)
+    "north_10_hallway1.jpg": {
+        id: 146,
+        connections: [
+            {
+                target: "north_10_hallway2.jpg",
+                targetId: 147,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "north_10_hallway2.jpg": {
+        id: 147,
+        connections: [
+            {
+                target: "north_10_hallway1.jpg",
+                targetId: 146,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "north_10_hallway3.jpg",
+                targetId: 148,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "north_10_hallway3.jpg": {
+        id: 148,
+        connections: [
+            {
+                target: "north_10_hallway2.jpg",
+                targetId: 147,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            }
+        ]
+    },
+
+    // North Building Floor 1 (already correct)
+    "north_1_hallway1.jpg": {
+        id: 149,
+        connections: [
+            {
+                target: "north_1_hallway2.jpg",
+                targetId: 150,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "north_1_hallway2.jpg": {
+        id: 150,
+        connections: [
+            {
+                target: "north_1_hallway1.jpg",
+                targetId: 149,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "north_1_hallway3.jpg",
+                targetId: 151,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "north_1_hallway3.jpg": {
+        id: 151,
+        connections: [
+            {
+                target: "north_1_hallway2.jpg",
+                targetId: 150,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            },
+            {
+                target: "north_1_hallway4.jpg",
+                targetId: 152,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 4"
+            }
+        ]
+    },
+    "north_1_hallway4.jpg": {
+        id: 152,
+        connections: [
+            {
+                target: "north_1_hallway3.jpg",
+                targetId: 151,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 3"
+            },
+            {
+                target: "north_1_hallway5.jpg",
+                targetId: 153,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 5"
+            }
+        ]
+    },
+    "north_1_hallway5.jpg": {
+        id: 153,
+        connections: [
+            {
+                target: "north_1_hallway4.jpg",
+                targetId: 152,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 4"
+            },
+            {
+                target: "north_1_hallway6.jpg",
+                targetId: 154,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 6"
+            }
+        ]
+    },
+    "north_1_hallway6.jpg": {
+        id: 154,
+        connections: [
+            {
+                target: "north_1_hallway5.jpg",
+                targetId: 153,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 5"
+            },
+            {
+                target: "north_1_hallway7.jpg",
+                targetId: 155,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 7"
+            }
+        ]
+    },
+    "north_1_hallway7.jpg": {
+        id: 155,
+        connections: [
+            {
+                target: "north_1_hallway6.jpg",
+                targetId: 154,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 6"
+            }
+        ]
+    },
+
+    // North Building Floor 2 (complete linear chain from hallway1 to hallway5)
+    "north_2_auditorium.jpg": {
+        id: 156,
+        connections: [
+            {
+                target: "north_2_auditorium2.jpg",
+                targetId: 157,
+                yaw: 90,
+                pitch: 0,
+                text: "To Second Auditorium View"
+            },
+            {
+                target: "north_2_hallway1.jpg",
+                targetId: 158,
+                yaw: 180,
+                pitch: 0,
+                text: "To Hallway"
+            }
+        ]
+    },
+    "north_2_auditorium2.jpg": {
+        id: 157,
+        connections: [
+            {
+                target: "north_2_auditorium.jpg",
+                targetId: 156,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Main Auditorium View"
+            }
+        ]
+    },
+    "north_2_hallway1.jpg": {
+        id: 158,
+        connections: [
+            {
+                target: "north_2_hallway2.jpg",
+                targetId: 159,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            },
+            {
+                target: "north_2_auditorium.jpg",
+                targetId: 156,
+                yaw: 0,
+                pitch: 0,
+                text: "To Auditorium"
+            }
+        ]
+    },
+    "north_2_hallway2.jpg": {
+        id: 159,
+        connections: [
+            {
+                target: "north_2_hallway1.jpg",
+                targetId: 158,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "north_2_hallway3.jpg",
+                targetId: 160,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "north_2_hallway3.jpg": {
+        id: 160,
+        connections: [
+            {
+                target: "north_2_hallway2.jpg",
+                targetId: 159,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            },
+            {
+                target: "north_2_hallway4.jpg",
+                targetId: 161,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 4"
+            }
+        ]
+    },
+    "north_2_hallway4.jpg": {
+        id: 161,
+        connections: [
+            {
+                target: "north_2_hallway3.jpg",
+                targetId: 160,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 3"
+            },
+            {
+                target: "north_2_hallway5.jpg",
+                targetId: 162,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 5"
+            }
+        ]
+    },
+    "north_2_hallway5.jpg": {
+        id: 162,
+        connections: [
+            {
+                target: "north_2_hallway4.jpg",
+                targetId: 161,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 4"
+            }
+        ]
+    },
+
+    // North Building Floor 3 (hallways 1 to 6, connect linearly)
+    "north_3_hallway1.jpg": {
+        id: 163,
+        connections: [
+            {
+                target: "north_3_hallway2.jpg",
+                targetId: 164,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "north_3_hallway2.jpg": {
+        id: 164,
+        connections: [
+            {
+                target: "north_3_hallway1.jpg",
+                targetId: 163,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "north_3_hallway3.jpg",
+                targetId: 165,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "north_3_hallway3.jpg": {
+        id: 165,
+        connections: [
+            {
+                target: "north_3_hallway2.jpg",
+                targetId: 164,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            },
+            {
+                target: "north_3_hallway4.jpg",
+                targetId: 166,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 4"
+            }
+        ]
+    },
+    "north_3_hallway4.jpg": {
+        id: 166,
+        connections: [
+            {
+                target: "north_3_hallway3.jpg",
+                targetId: 165,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 3"
+            },
+            {
+                target: "north_3_hallway5.jpg",
+                targetId: 167,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 5"
+            }
+        ]
+    },
+    "north_3_hallway5.jpg": {
+        id: 167,
+        connections: [
+            {
+                target: "north_3_hallway4.jpg",
+                targetId: 166,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 4"
+            },
+            {
+                target: "north_3_hallway6.jpg",
+                targetId: 168,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 6"
+            }
+        ]
+    },
+    "north_3_hallway6.jpg": {
+        id: 168,
+        connections: [
+            {
+                target: "north_3_hallway5.jpg",
+                targetId: 167,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 5"
+            }
+        ]
+    },
+
+    // North Building Floor 4 (hallways 1 to 4)
+    "north_4_hallway1.jpg": {
+        id: 169,
+        connections: [
+            {
+                target: "north_4_hallway2.jpg",
+                targetId: 170,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "north_4_hallway2.jpg": {
+        id: 170,
+        connections: [
+            {
+                target: "north_4_hallway1.jpg",
+                targetId: 169,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "north_4_hallway3.jpg",
+                targetId: 171,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "north_4_hallway3.jpg": {
+        id: 171,
+        connections: [
+            {
+                target: "north_4_hallway2.jpg",
+                targetId: 170,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            },
+            {
+                target: "north_4_hallway4.jpg",
+                targetId: 172,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 4"
+            }
+        ]
+    },
+    "north_4_hallway4.jpg": {
+        id: 172,
+        connections: [
+            {
+                target: "north_4_hallway3.jpg",
+                targetId: 171,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 3"
+            }
+        ]
+    },
+
+    // North Building Floor 5 (hallways 1 to 6)
+    "north_5_hallway1.jpg": {
+        id: 173,
+        connections: [
+            {
+                target: "north_5_hallway2.jpg",
+                targetId: 174,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "north_5_hallway2.jpg": {
+        id: 174,
+        connections: [
+            {
+                target: "north_5_hallway1.jpg",
+                targetId: 173,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "north_5_hallway3.jpg",
+                targetId: 175,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "north_5_hallway3.jpg": {
+        id: 175,
+        connections: [
+            {
+                target: "north_5_hallway2.jpg",
+                targetId: 174,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            },
+            {
+                target: "north_5_hallway4.jpg",
+                targetId: 176,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 4"
+            }
+        ]
+    },
+    "north_5_hallway4.jpg": {
+        id: 176,
+        connections: [
+            {
+                target: "north_5_hallway3.jpg",
+                targetId: 175,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 3"
+            },
+            {
+                target: "north_5_hallway5.jpg",
+                targetId: 177,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 5"
+            }
+        ]
+    },
+    "north_5_hallway5.jpg": {
+        id: 177,
+        connections: [
+            {
+                target: "north_5_hallway4.jpg",
+                targetId: 176,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 4"
+            },
+            {
+                target: "north_5_hallway6.jpg",
+                targetId: 178,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 6"
+            }
+        ]
+    },
+    "north_5_hallway6.jpg": {
+        id: 178,
+        connections: [
+            {
+                target: "north_5_hallway5.jpg",
+                targetId: 177,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 5"
+            }
+        ]
+    },
+
+    // North Building Floor 6 (hallways 1 to 6)
+    "north_6_hallway1.jpg": {
+        id: 179,
+        connections: [
+            {
+                target: "north_6_hallway2.jpg",
+                targetId: 180,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "north_6_hallway2.jpg": {
+        id: 180,
+        connections: [
+            {
+                target: "north_6_hallway1.jpg",
+                targetId: 179,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "north_6_hallway3.jpg",
+                targetId: 181,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "north_6_hallway3.jpg": {
+        id: 181,
+        connections: [
+            {
+                target: "north_6_hallway2.jpg",
+                targetId: 180,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            },
+            {
+                target: "north_6_hallway4.jpg",
+                targetId: 182,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 4"
+            }
+        ]
+    },
+    "north_6_hallway4.jpg": {
+        id: 182,
+        connections: [
+            {
+                target: "north_6_hallway3.jpg",
+                targetId: 181,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 3"
+            },
+            {
+                target: "north_6_hallway5.jpg",
+                targetId: 183,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 5"
+            }
+        ]
+    },
+    "north_6_hallway5.jpg": {
+        id: 183,
+        connections: [
+            {
+                target: "north_6_hallway4.jpg",
+                targetId: 182,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 4"
+            },
+            {
+                target: "north_6_hallway6.jpg",
+                targetId: 184,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 6"
+            }
+        ]
+    },
+    "north_6_hallway6.jpg": {
+        id: 184,
+        connections: [
+            {
+                target: "north_6_hallway5.jpg",
+                targetId: 183,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 5"
+            }
+        ]
+    },
+
+    // North Building Floor 7 (hallways 1 to 4)
+    "north_7_hallway1.jpg": {
+        id: 185,
+        connections: [
+            {
+                target: "north_7_hallway2.jpg",
+                targetId: 186,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "north_7_hallway2.jpg": {
+        id: 186,
+        connections: [
+            {
+                target: "north_7_hallway1.jpg",
+                targetId: 185,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "north_7_hallway3.jpg",
+                targetId: 187,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "north_7_hallway3.jpg": {
+        id: 187,
+        connections: [
+            {
+                target: "north_7_hallway2.jpg",
+                targetId: 186,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            },
+            {
+                target: "north_7_hallway4.jpg",
+                targetId: 188,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 4"
+            }
+        ]
+    },
+    "north_7_hallway4.jpg": {
+        id: 188,
+        connections: [
+            {
+                target: "north_7_hallway3.jpg",
+                targetId: 187,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 3"
+            }
+        ]
+    },
+
+    // North Building Floor 8 (hallways 1 to 4)
+    "north_8_hallway1.jpg": {
+        id: 189,
+        connections: [
+            {
+                target: "north_8_hallway2.jpg",
+                targetId: 190,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "north_8_hallway2.jpg": {
+        id: 190,
+        connections: [
+            {
+                target: "north_8_hallway1.jpg",
+                targetId: 189,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "north_8_hallway3.jpg",
+                targetId: 191,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "north_8_hallway3.jpg": {
+        id: 191,
+        connections: [
+            {
+                target: "north_8_hallway2.jpg",
+                targetId: 190,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            },
+            {
+                target: "north_8_hallway4.jpg",
+                targetId: 192,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 4"
+            }
+        ]
+    },
+    "north_8_hallway4.jpg": {
+        id: 192,
+        connections: [
+            {
+                target: "north_8_hallway3.jpg",
+                targetId: 191,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 3"
+            }
+        ]
+    },
+
+    // Thomas Hunter Building Floor 1 (given)
+    "thomashunter_1_hallway.jpg": {
+        id: 193,
+        connections: [
+            {
+                target: "thomashunter_1_staircase.jpg",
+                targetId: 194,
+                yaw: 90,
+                pitch: 0,
+                text: "To Staircase"
+            }
+        ]
+    },
+    "thomashunter_1_staircase.jpg": {
+        id: 194,
+        connections: [
+            {
+                target: "thomashunter_1_hallway.jpg",
+                targetId: 193,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway"
+            },
+            {
+                target: "thomashunter_1_staircase2.jpg",
+                targetId: 195,
+                yaw: 90,
+                pitch: 0,
+                text: "Up Stairs"
+            }
+        ]
+    },
+    "thomashunter_1_staircase2.jpg": {
+        id: 195,
+        connections: [
+            {
+                target: "thomashunter_1_staircase.jpg",
+                targetId: 194,
+                yaw: 270,
+                pitch: 0,
+                text: "Back Down"
+            }
+        ]
+    },
+
+    // Thomas Hunter Building Floor 2 (hallways 1 to 3)
+    "thomashunter_2_hallway1.jpg": {
+        id: 196,
+        connections: [
+            {
+                target: "thomashunter_2_hallway2.jpg",
+                targetId: 197,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "thomashunter_2_hallway2.jpg": {
+        id: 197,
+        connections: [
+            {
+                target: "thomashunter_2_hallway1.jpg",
+                targetId: 196,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "thomashunter_2_hallway3.jpg",
+                targetId: 198,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "thomashunter_2_hallway3.jpg": {
+        id: 198,
+        connections: [
+            {
+                target: "thomashunter_2_hallway2.jpg",
+                targetId: 197,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            }
+        ]
+    },
+
+    // Thomas Hunter Building Floor 3 (hallways 1 to 3)
+    "thomashunter_3_hallway1.jpg": {
+        id: 199,
+        connections: [
+            {
+                target: "thomashunter_3_hallway2.jpg",
+                targetId: 200,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "thomashunter_3_hallway2.jpg": {
+        id: 200,
+        connections: [
+            {
+                target: "thomashunter_3_hallway1.jpg",
+                targetId: 199,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            },
+            {
+                target: "thomashunter_3_hallway3.jpg",
+                targetId: 201,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 3"
+            }
+        ]
+    },
+    "thomashunter_3_hallway3.jpg": {
+        id: 201,
+        connections: [
+            {
+                target: "thomashunter_3_hallway2.jpg",
+                targetId: 200,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 2"
+            }
+        ]
+    },
+
+    // Thomas Hunter Building Floor 4 (only one hallway, no chain)
+    "thomashunter_4_hallway.jpg": {
+        id: 202,
+        connections: []
+    },
+
+    // Thomas Hunter Building Floor 5 (hallways 1 to 2)
+    "thomashunter_5_hallway1.jpg": {
+        id: 203,
+        connections: [
+            {
+                target: "thomashunter_5_hallway2.jpg",
+                targetId: 204,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway 2"
+            }
+        ]
+    },
+    "thomashunter_5_hallway2.jpg": {
+        id: 204,
+        connections: [
+            {
+                target: "thomashunter_5_hallway1.jpg",
+                targetId: 203,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway 1"
+            }
+        ]
+    },
+
+    // West Building Floor 2 (no hallway chain or given connections)
+    "west_2_215.jpg": { id: 205, connections: [] },
+    "west_2_w217.jpg": { id: 206, connections: [] },
+
+    // West Building Floor 3 (already defined)
+    "west_3_cafe3.jpg": {
+        id: 207,
+        connections: [
+            {
+                target: "west_3_hallway3.jpg",
+                targetId: 208,
+                yaw: 90,
+                pitch: 0,
+                text: "To Hallway"
+            },
+            {
+                target: "west_3_studyarea3.jpg",
+                targetId: 211,
+                yaw: 180,
+                pitch: 0,
+                text: "To Study Area"
+            }
+        ]
+    },
+    "west_3_hallway3.jpg": {
+        id: 208,
+        connections: [
+            {
+                target: "west_3_cafe3.jpg",
+                targetId: 207,
+                yaw: 270,
+                pitch: 0,
+                text: "To Cafe"
+            },
+            {
+                target: "west_3_skybridgeeast3.jpg",
+                targetId: 209,
+                yaw: 90,
+                pitch: 0,
+                text: "To East Skybridge"
+            },
+            {
+                target: "west_3_skybridgenorth3.jpg",
+                targetId: 210,
+                yaw: 0,
+                pitch: 0,
+                text: "To North Skybridge"
+            }
+        ]
+    },
+    "west_3_skybridgeeast3.jpg": {
+        id: 209,
+        connections: [
+            {
+                target: "west_3_hallway3.jpg",
+                targetId: 208,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway"
+            }
+        ]
+    },
+    "west_3_skybridgenorth3.jpg": {
+        id: 210,
+        connections: [
+            {
+                target: "west_3_hallway3.jpg",
+                targetId: 208,
+                yaw: 180,
+                pitch: 0,
+                text: "Back to Hallway"
+            }
+        ]
+    },
+    "west_3_studyarea3.jpg": {
+        id: 211,
+        connections: [
+            {
+                target: "west_3_cafe3.jpg",
+                targetId: 207,
+                yaw: 0,
+                pitch: 0,
+                text: "Back to Cafe"
+            }
+        ]
+    },
+    "west_3_w309.jpg": { id: 212, connections: [] },
+
+    // West Building Floor 5 (already defined from initial)
+    "west_5_hallway5.jpg": {
+        id: 213,
+        connections: [
+            {
+                target: "west_5_studyarea5.jpg",
+                targetId: 214,
+                yaw: 90,
+                pitch: 0,
+                text: "To Study Area"
+            },
+            {
+                target: "west_5_w505.jpg",
+                targetId: 215,
+                yaw: 0,
+                pitch: 0,
+                text: "To Room 505"
+            }
+        ]
+    },
+    "west_5_studyarea5.jpg": {
+        id: 214,
+        connections: [
+            {
+                target: "west_5_hallway5.jpg",
+                targetId: 213,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Hallway"
+            },
+            {
+                target: "west_5_w506.jpg",
+                targetId: 216,
+                yaw: 90,
+                pitch: 0,
+                text: "To Room 506"
+            }
+        ]
+    },
+    "west_5_w505.jpg": {
+        id: 215,
+        connections: [
+            {
+                target: "west_5_hallway5.jpg",
+                targetId: 213,
+                yaw: 180,
+                pitch: 0,
+                text: "Back to Hallway"
+            }
+        ]
+    },
+    "west_5_w506.jpg": {
+        id: 216,
+        connections: [
+            {
+                target: "west_5_studyarea5.jpg",
+                targetId: 214,
+                yaw: 270,
+                pitch: 0,
+                text: "Back to Study Area"
+            }
+        ]
+    },
+    "west_5_w507.jpg": { id: 217, connections: [] },
+    "west_5_w508.jpg": { id: 218, connections: [] },
+    "west_5_w509.jpg": { id: 219, connections: [] },
+    "west_5_w522.jpg": { id: 220, connections: [] },
+
+    // West Building Floor 6 (no given connections)
+    "west_6_hallway6.jpg": { id: 221, connections: [] },
+    "west_6_studyarea6.jpg": { id: 222, connections: [] },
+    "west_6_w604.jpg": { id: 223, connections: [] },
+    "west_6_w610.jpg": { id: 224, connections: [] },
+    "west_6_w611.jpg": { id: 225, connections: [] },
+    "west_6_w615.jpg": { id: 226, connections: [] },
+
+    // West Building Floor 7 (no given connections)
+    "west_7_hallway7.jpg": { id: 227, connections: [] },
+    "west_7_skybridge7.jpg": { id: 228, connections: [] },
+    "west_7_studyarea7.jpg": { id: 229, connections: [] },
+    "west_7_w706.jpg": { id: 230, connections: [] },
+    "west_7_w708.jpg": { id: 231, connections: [] },
+    "west_7_w714.jpg": { id: 232, connections: [] }
+};
+
 const Pano = () => {
     const [sceneId, setSceneId] = useState(0);
     const [selectedImage, setSelectedImage] = useState('');
@@ -21,7 +1328,7 @@ const Pano = () => {
     const [selectedLocationBuilding, setSelectedLocationBuilding] = useState(null);
     const [selectedLocationFloor, setSelectedLocationFloor] = useState(null);
     const [selectedLocationRoom, setSelectedLocationRoom] = useState(null);
-
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const [guessBool, setGuessBool] = useState(false); // bool for score calculation, true if guess is correct, false if guess is wrong
@@ -42,7 +1349,105 @@ const Pano = () => {
     const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
     const [graphData, setGraphData] = useState(null);
     const [visibleNodes, setVisibleNodes] = useState(new Set(['Buildings']));
+    const [hotSpots, setHotSpots] = useState([]);
+const [currentScene, setCurrentScene] = useState(null);
+const [isNavigating, setIsNavigating] = useState(false);
 
+// Add this constant for custom styles
+const customStyles = `
+   .custom-hotspot {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-hotspot:before {
+    content: '→';
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.custom-hotspot:hover {
+    transform: translateY(-2px) scale(1.05);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.custom-tooltip-wrapper {
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.custom-tooltip {
+    visibility: hidden;
+    background: rgba(17, 24, 39, 0.95);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateY(10px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.custom-hotspot:hover .custom-tooltip {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.custom-tooltip:after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: inherit;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transform-origin: center;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+/* Add subtle pulse animation */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.custom-hotspot {
+    animation: pulse 2s infinite;
+    animation-play-state: paused;
+}
+
+.custom-hotspot:hover {
+    animation-play-state: running;
+}
+`;
     const showModal = (message) => {
         setModalMessage(message);
         setIsModalVisible(true);
@@ -92,60 +1497,214 @@ const Pano = () => {
         setSceneId(prevId => prevId + 1);
     };
 
-    const fetchRandomImage = async () => {
-        try {
-            const res2 = await axios.get('https://hunterguessr-6d520ba70010.herokuapp.com/AmountOfImages');
-            var total = res2.data.count;
-            if (usedImageIds.size >= total) {
-                showModal('Congrats you have completed the game! Please refresh the page to play again.');
-                return;
-            }
 
+    const handleHotspotClick = async (event, args) => {
+        if (!args || !args.targetId) {
+            console.error('Invalid hotspot arguments');
+            return;
+        }
+        
+        try {
+            setIsLoading(true);
             
-            const response = await axios.get('https://hunterguessr-6d520ba70010.herokuapp.com/GrabImageForGuessing');
-            const image = response.data;
-            console.log(total);
+            // Find the scene information
+            const sceneEntry = Object.entries(sceneConnections).find(([_, info]) => info.id === args.targetId);
+            
+            if (!sceneEntry) {
+                throw new Error(`Scene information not found for ID: ${args.targetId}`);
+            }
+            
+            const [fileName, sceneInfo] = sceneEntry;
     
-            if (image && image.id && image.photo && image.file_name) {
-                if (usedImageIds.has(image.id)) {
-                    console.log('Image already used');
-                    return fetchRandomImage();
-                }
+            // Fetch the image data with blob response type
+            const response = await axios.get(
+                `https://hunterguessr-6d520ba70010.herokuapp.com/retrieve_image/${args.targetId}`,
+                { responseType: 'blob' }
+            );
     
-                // Parse building and floor from file name
-                const fileNameParts = image.file_name.split('_'); // Split by underscores
-                const building = fileNameParts[0]; // First part is the building
-                const floor = fileNameParts[1];    // Second part is the floor
-                const room = fileNameParts.slice(2).join('_').replace('.jpg', ''); // Combine remaining parts for room
+            // Convert blob to base64
+            const blobData = response.data;
+            const base64Data = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(blobData);
+            });
     
-                console.log(`Building: ${building}, Floor: ${floor}, Room: ${room}`);
+            // Create hotspots for the new scene
+            const newHotspots = sceneInfo.connections.map(connection => ({
+                pitch: connection.pitch,
+                yaw: connection.yaw,
+                type: "custom",
+                cssClass: "custom-hotspot",
+                createTooltipFunc: (hotSpotDiv, args) => {
+                    hotSpotDiv.classList.add('custom-tooltip-wrapper');
+                    const tooltip = document.createElement('div');
+                    tooltip.classList.add('custom-tooltip');
+                    tooltip.innerText = args;
+                    hotSpotDiv.appendChild(tooltip);
+                },
+                createTooltipArgs: connection.text,
+                clickHandlerFunc: handleHotspotClick,
+                clickHandlerArgs: { targetId: connection.targetId }
+            }));
     
-                setSelectedImage(`data:image/jpeg;base64,${image.photo}`);
-                setRandomImage({ ...image, building, floor, room }); // Include parsed info in the image state
-                setUsedImageIds(prev => new Set(prev).add(image.id));
+            // Create and load the new scene
+            const nextSceneId = sceneId + 1;
+            const newSceneConfig = {
+                type: "equirectangular",
+                imageSource: `data:image/jpeg;base64,${base64Data}`,
+                hotSpots: newHotspots,
+                autoLoad: true,
+                haov: 360,
+                vaov: 90
+            };
     
-                const img = new Image();
-                img.src = `data:image/jpeg;base64,${image.photo}`;
-                img.onload = () => {
+            addScene(`scene-${nextSceneId}`, newSceneConfig);
+            loadScene(`scene-${nextSceneId}`);
+            
+            // Update state
+            setSceneId(nextSceneId);
+            setSelectedImage(`data:image/jpeg;base64,${base64Data}`);
+            setHotSpots(newHotspots);
+            setCurrentSceneId(args.targetId);
+    
+        } catch (error) {
+            console.error('Error loading scene:', error);
+            showModal('Error loading scene. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+   // Update your fetchRandomImage function to use the same hotspot configuration
+   const [isPanoramaReady, setIsPanoramaReady] = useState(false);
+
+   const fetchRandomImage = async () => {
+       try {
+           setIsLoading(true);
+           setIsPanoramaReady(false); // Reset panorama state
+
+           const response = await axios.get('https://hunterguessr-6d520ba70010.herokuapp.com/GrabImageForGuessing');
+           const imageData = response.data;
+
+           if (!imageData || !imageData.photo || !imageData.file_name) {
+               throw new Error('Invalid image data received');
+           }
+
+           // Create base64 image source
+           const imageSource = `data:image/jpeg;base64,${imageData.photo}`;
+
+           // Create scene configuration
+           const nextSceneId = sceneId + 1;
+           const newSceneConfig = {
+               type: "equirectangular",
+               imageSource: imageSource,
+               autoLoad: true,
+               haov: 360,
+               vaov: 90,
+               hotSpots: []
+           };
+
+           // Add hotspots if available
+           const sceneInfo = sceneConnections[imageData.file_name];
+           if (sceneInfo?.connections) {
+               newSceneConfig.hotSpots = sceneInfo.connections.map(conn => ({
+                   pitch: conn.pitch,
+                   yaw: conn.yaw,
+                   type: "custom",
+                   cssClass: "custom-hotspot",
+                   createTooltipFunc: (hotSpotDiv, args) => {
+                       hotSpotDiv.classList.add('custom-tooltip-wrapper');
+                       const tooltip = document.createElement('div');
+                       tooltip.classList.add('custom-tooltip');
+                       tooltip.innerText = args;
+                       hotSpotDiv.appendChild(tooltip);
+                   },
+                   createTooltipArgs: conn.text,
+                   clickHandlerFunc: handleHotspotClick,
+                   clickHandlerArgs: { targetId: conn.targetId }
+               }));
+           }
+
+           // Add scene first
+           addScene(`scene-${nextSceneId}`, newSceneConfig);
+
+           // Update state
+           setSceneId(nextSceneId);
+           setSelectedImage(imageSource);
+           setRandomImage({
+               ...imageData,
+               building: imageData.file_name.split('_')[0],
+               floor: imageData.file_name.split('_')[1],
+               room: imageData.file_name.split('_')[2].replace('.jpg', '')
+           });
+           setHotSpots(newSceneConfig.hotSpots || []);
+           
+           // Mark panorama as ready before loading scene
+           setIsPanoramaReady(true);
+
+           // Load scene after state is updated
+           setTimeout(() => {
+               loadScene(`scene-${nextSceneId}`);
+               setElapsedTime(0);
+               incrementRound();
+           }, 100);
+
+       } catch (error) {
+           console.error('Error retrieving random image:', error);
+           showModal('Error loading image. Please try again.');
+       } finally {
+           setIsLoading(false);
+       }
+   };
+    const loadSceneById = async (targetId) => {
+        try {
+            const response = await axios.get(`https://hunterguessr-6d520ba70010.herokuapp.com/retrieve_image/${targetId}`);
+            const imageData = response.data;
+    
+            if (imageData && imageData.photo) {
+                // Find scene info from connections
+                const sceneEntry = Object.entries(sceneConnections).find(([_, info]) => info.id === targetId);
+                if (sceneEntry) {
+                    const [fileName, sceneInfo] = sceneEntry;
+                    
+                    // Generate hotspots for the new scene
+                    const hotspots = sceneInfo.connections.map(connection => ({
+                        pitch: connection.pitch,
+                        yaw: connection.yaw,
+                        type: "custom",
+                        cssClass: "custom-hotspot",
+                        createTooltipFunc: (hotSpotDiv, args) => {
+                            hotSpotDiv.classList.add('custom-tooltip-wrapper');
+                            const tooltip = document.createElement('div');
+                            tooltip.classList.add('custom-tooltip');
+                            tooltip.innerText = args;
+                            hotSpotDiv.appendChild(tooltip);
+                        },
+                        createTooltipArgs: connection.text,
+                        clickHandlerFunc: (e, args) => {
+                            loadSceneById(args.targetId);
+                        },
+                        clickHandlerArgs: { targetId: connection.targetId }
+                    }));
+    
+                    // Add and load the new scene
                     addScene(`scene-${sceneId}`, {
                         type: "equirectangular",
-                        imageSource: `data:image/jpeg;base64,${image.photo}`,
-                        haov: equirectangularOptions.haov,
-                        vaov: equirectangularOptions.vaov,
+                        imageSource: `data:image/jpeg;base64,${imageData.photo}`,
+                        hotSpots: hotspots,
                         ...config
-                    }, loadNewScene);
-                };
-            } else {
-                console.error('Invalid image data received:', image);
-                showModal('Failed to load image. Please try again.');
+                    }, () => {
+                        loadScene(`scene-${sceneId}`);
+                        setSceneId(prev => prev + 1);
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error retrieving random image:', error);
-            showModal('Error retrieving image. Please try again.');
+            console.error('Error loading scene:', error);
+            showModal('Error loading scene. Please try again.');
         }
-    
-        setElapsedTime(0); // Reset time on new image
-        incrementRound(); // Increment round on new image
     };
 
     const buildingData = {
@@ -435,6 +1994,75 @@ const Pano = () => {
         }
     };
     
+    const [currentSceneId, setCurrentSceneId] = useState(null);
+    
+    // Add this new function to handle hotspot navigation
+    const loadConnectedScene = async (targetId) => {
+        try {
+            setIsLoading(true);
+            const response = await axios.get(`https://hunterguessr-6d520ba70010.herokuapp.com/retrieve_image/${targetId}`);
+            
+            if (!response.data || !response.data.photo) {
+                console.error('Invalid image data received');
+                return;
+            }
+
+            const imageData = response.data;
+            const nextSceneId = sceneId + 1;
+
+            // Find connected scene information
+            const sceneInfo = Object.entries(sceneConnections).find(([_, info]) => info.id === targetId);
+            if (!sceneInfo) return;
+
+            const [fileName, info] = sceneInfo;
+
+            // Create hotspots for the connected scene
+            const connectedHotspots = info.connections.map(conn => ({
+                pitch: conn.pitch,
+                yaw: conn.yaw,
+                type: "custom",
+                cssClass: "custom-hotspot",
+                createTooltipFunc: (hotSpotDiv, args) => {
+                    hotSpotDiv.classList.add('custom-tooltip-wrapper');
+                    const tooltip = document.createElement('div');
+                    tooltip.classList.add('custom-tooltip');
+                    tooltip.innerText = args;
+                    hotSpotDiv.appendChild(tooltip);
+                },
+                createTooltipArgs: conn.text,
+                clickHandlerFunc: async (evt, args) => {
+                    await loadConnectedScene(args.targetId);
+                },
+                clickHandlerArgs: { targetId: conn.targetId }
+            }));
+
+            // Create the new scene configuration
+            const newScene = {
+                type: "equirectangular",
+                imageSource: `data:image/jpeg;base64,${imageData.photo}`,
+                hotSpots: connectedHotspots,
+                autoLoad: true,
+                haov: 360,
+                vaov: 90
+            };
+
+            // Add the new scene and load it
+            addScene(`scene-${nextSceneId}`, newScene);
+            loadScene(`scene-${nextSceneId}`);
+            
+            // Update state
+            setSceneId(nextSceneId);
+            setSelectedImage(`data:image/jpeg;base64,${imageData.photo}`);
+            setCurrentSceneId(targetId);
+            setHotSpots(connectedHotspots);
+
+        } catch (error) {
+            console.error('Error loading connected scene:', error);
+            showModal('Error loading connected scene. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     // save data for match hist - on next image click
     /*const saveData = () => {
@@ -612,22 +2240,75 @@ const Pano = () => {
                 </div>
             </div>
             <ReactPannellum
-    ref={pannellumRef}
-    id="1"
-    sceneId={`scene-${sceneId}`}
-    style={{
-        width: "100%",
-        height: "100%",
-        borderRadius: "10px",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-        overflow: "hidden",
-        position: "relative",
-    }}
-    imageSource={selectedImage}
-    config={config}
-    equirectangularOptions={equirectangularOptions}
-/>
+                ref={pannellumRef}
+                id="1"
+                sceneId={`scene-${sceneId}`}
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "10px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                    overflow: "hidden",
+                    position: "relative",
+                }}
+                imageSource={selectedImage}
+                config={{
+                    autoLoad: true,
+                    sceneFadeDuration: 1000,
+                    type: "equirectangular",
+                    haov: 360,
+                    vaov: 90,
+                    hotSpots: hotSpots,
+                    cssCustom: `
+                        #panorama {
+                            width: 100%;
+                            height: 100%;
+                        }
 
+                        div.custom-hotspot {
+                            height: 50px;
+                            width: 50px;
+                            background: rgba(87, 13, 248, 0.75);
+                            border: 2px solid rgba(255, 255, 255, 0.8);
+                            border-radius: 50%;
+                            cursor: pointer;
+                        }
+
+                        div.custom-tooltip span {
+                            visibility: hidden;
+                            position: absolute;
+                            border-radius: 6px;
+                            background-color: #fff;
+                            color: #000;
+                            text-align: center;
+                            max-width: 200px;
+                            padding: 8px 15px;
+                            margin-left: -220px;
+                            margin-top: -50px;
+                            cursor: default;
+                            font-weight: 500;
+                            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+                        }
+
+                        div.custom-tooltip:hover span {
+                            visibility: visible;
+                        }
+
+                        div.custom-tooltip:hover span:after {
+                            content: '';
+                            position: absolute;
+                            width: 0;
+                            height: 0;
+                            border-width: 10px;
+                            border-style: solid;
+                            border-color: #fff transparent transparent transparent;
+                            bottom: -20px;
+                            left: -10px;
+                            margin: 0 50%;
+                        }
+                    `
+                }}
+            />
             {isModalVisible && (
                 <div className="modal-overlay">
                     <div className="modal-content">
