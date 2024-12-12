@@ -102,24 +102,7 @@ const Leaderboard = () => {
                                     },
                                 },
                             }}
-                            sx={{
-                                '& .MuiDataGrid-root': {
-                                    backgroundColor: 'white',
-                                    color: 'black',
-                                },
-                                '& .MuiDataGrid-row:nth-of-type(even)': {
-                                    backgroundColor: '#f2f2f2',
-                                    color: 'black',
-                                },
-                                '& .MuiDataGrid-row:nth-of-type(odd)': {
-                                    backgroundColor: 'white',
-                                    color: 'black',
-                                },
-                                '& .MuiDataGrid-columnHeaders': {
-                                    backgroundColor: 'white',
-                                    color: 'white',
-                                },
-                            }}
+                
                             pageSizeOptions={[10]}
                             disableSelectionOnClick
                             disableColumnSelector
