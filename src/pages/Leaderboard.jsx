@@ -90,7 +90,7 @@ const Leaderboard = () => {
             ) : (
                 <div className="space-y-6">
                     <h2 className="text-2xl font-bold text-center mb-6">Leaderboard</h2>
-                    <div className="h-[600px] w-full bg-white rounded-lg shadow-lg">
+                    <div className="tablebox">
                         <DataGrid
                         
                             rows={leaderboardData}
@@ -100,6 +100,24 @@ const Leaderboard = () => {
                                     paginationModel: {
                                         pageSize: 10,
                                     },
+                                },
+                            }}
+                            sx={{
+                                '& .MuiDataGrid-root': {
+                                    backgroundColor: 'white',
+                                    color: 'black',
+                                },
+                                '& .MuiDataGrid-row:nth-of-type(even)': {
+                                    backgroundColor: '#f2f2f2',
+                                    color: 'black',
+                                },
+                                '& .MuiDataGrid-row:nth-of-type(odd)': {
+                                    backgroundColor: 'white',
+                                    color: 'black',
+                                },
+                                '& .MuiDataGrid-columnHeaders': {
+                                    backgroundColor: 'white',
+                                    color: 'white',
                                 },
                             }}
                             pageSizeOptions={[10]}
