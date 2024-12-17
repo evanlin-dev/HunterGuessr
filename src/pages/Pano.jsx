@@ -6,7 +6,6 @@ import { Graph } from 'react-d3-graph';
 import { Flip } from '@mui/icons-material';
 
 const sceneConnections = {
-    // East Building Scenes (no given connections)
     // East Building Floor 1
     "east_1_hallway1.jpg": {
         id: 133,
@@ -32,13 +31,13 @@ const sceneConnections = {
     // East Building Floor 4
     "east_4_room402.jpg": {
         id: 135,
-        connections: []  // End of floor connection
+        connections: [] 
     },
 
     // East Building Floor 5
     "east_5_mainarea.jpg": {
         id: 136,
-        connections: []  // End of floor connection
+        connections: [] 
     },
 
     // East Building Floor 6
@@ -187,7 +186,7 @@ const sceneConnections = {
 
 
 
-    // North Building Floor 10 (already correct from your initial data)
+    // North Building Floor 10
     "north_10_hallway1.jpg": {
         id: 146,
         connections: [
@@ -231,8 +230,7 @@ const sceneConnections = {
             }
         ]
     },
-
-    // North Building Floor 1 (already correct)
+    // North Building Floor 1 
     "north_1_hallway1.jpg": {
         id: 149,
         connections: [
@@ -353,7 +351,7 @@ const sceneConnections = {
         ]
     },
 
-    // North Building Floor 2 (complete linear chain from hallway1 to hallway5)
+    // North Building Floor 2 
     "north_2_auditorium.jpg": {
         id: 156,
         connections: [
@@ -474,7 +472,7 @@ const sceneConnections = {
         ]
     },
 
-    // North Building Floor 3 (hallways 1 to 6, connect linearly)
+    // North Building Floor 3 
     "north_3_hallway1.jpg": {
         id: 163,
         connections: [
@@ -576,7 +574,7 @@ const sceneConnections = {
         ]
     },
 
-    // North Building Floor 4 (hallways 1 to 4)
+    // North Building Floor 4
     "north_4_hallway1.jpg": {
         id: 169,
         connections: [
@@ -972,7 +970,7 @@ const sceneConnections = {
         ]
     },
 
-    // Thomas Hunter Building Floor 1 (given)
+    // Thomas Hunter Building Floor 1 
     "thomashunter_1_hallway.jpg": {
         id: 193,
         connections: [
@@ -1107,7 +1105,7 @@ const sceneConnections = {
         ]
     },
 
-    // Thomas Hunter Building Floor 4 (only one hallway, no chain)
+    // Thomas Hunter Building Floor 4 
     "thomashunter_4_hallway.jpg": {
         id: 202,
         connections: []
@@ -1139,11 +1137,11 @@ const sceneConnections = {
         ]
     },
 
-    // West Building Floor 2 (no hallway chain or given connections)
+    // West Building Floor 2 
     "west_2_215.jpg": { id: 205, connections: [] },
     "west_2_w217.jpg": { id: 206, connections: [] },
 
-    // West Building Floor 3 (already defined)
+    // West Building Floor 3 
     "west_3_cafe3.jpg": {
         id: 207,
         connections: [
@@ -1227,7 +1225,7 @@ const sceneConnections = {
     },
     "west_3_w309.jpg": { id: 212, connections: [] },
 
-    // West Building Floor 5 (already defined from initial)
+    // West Building Floor 5 
     "west_5_hallway5.jpg": {
         id: 213,
         connections: [
@@ -1331,7 +1329,7 @@ const Pano = () => {
     const [isLoading, setIsLoading] = useState(false);
 
 
-    const [guessBool, setGuessBool] = useState(false); // bool for score calculation, true if guess is correct, false if guess is wrong
+    const [guessBool, setGuessBool] = useState(false); 
 
     const [buildings, setBuildings] = useState([]);
     const [floors, setFloors] = useState([]);
@@ -1353,7 +1351,6 @@ const Pano = () => {
 const [currentScene, setCurrentScene] = useState(null);
 const [isNavigating, setIsNavigating] = useState(false);
 
-// Add this constant for custom styles
 const customStyles = `
    .custom-hotspot {
     width: 48px;
@@ -1563,7 +1560,6 @@ const customStyles = `
             addScene(`scene-${nextSceneId}`, newSceneConfig);
             loadScene(`scene-${nextSceneId}`);
             
-            // Update state
             setSceneId(nextSceneId);
             setSelectedImage(`data:image/jpeg;base64,${base64Data}`);
             setHotSpots(newHotspots);
@@ -1577,13 +1573,12 @@ const customStyles = `
         }
     };
     
-   // Update your fetchRandomImage function to use the same hotspot configuration
    const [isPanoramaReady, setIsPanoramaReady] = useState(false);
 
    const fetchRandomImage = async () => {
        try {
            setIsLoading(true);
-           setIsPanoramaReady(false); // Reset panorama state
+           setIsPanoramaReady(false);
 
            const response = await axios.get('https://hunterguessr-6d520ba70010.herokuapp.com/GrabImageForGuessing');
            const imageData = response.data;
@@ -1606,7 +1601,6 @@ const customStyles = `
                hotSpots: []
            };
 
-           // Add hotspots if available
            const sceneInfo = sceneConnections[imageData.file_name];
            if (sceneInfo?.connections) {
                newSceneConfig.hotSpots = sceneInfo.connections.map(conn => ({
@@ -1627,10 +1621,8 @@ const customStyles = `
                }));
            }
 
-           // Add scene first
            addScene(`scene-${nextSceneId}`, newSceneConfig);
 
-           // Update state
            setSceneId(nextSceneId);
            setSelectedImage(imageSource);
            setRandomImage({
@@ -1641,7 +1633,6 @@ const customStyles = `
            });
            setHotSpots(newSceneConfig.hotSpots || []);
            
-           // Mark panorama as ready before loading scene
            setIsPanoramaReady(true);
 
            // Load scene after state is updated
@@ -1996,7 +1987,6 @@ const customStyles = `
     
     const [currentSceneId, setCurrentSceneId] = useState(null);
     
-    // Add this new function to handle hotspot navigation
     const loadConnectedScene = async (targetId) => {
         try {
             setIsLoading(true);
@@ -2016,7 +2006,6 @@ const customStyles = `
 
             const [fileName, info] = sceneInfo;
 
-            // Create hotspots for the connected scene
             const connectedHotspots = info.connections.map(conn => ({
                 pitch: conn.pitch,
                 yaw: conn.yaw,
@@ -2046,7 +2035,6 @@ const customStyles = `
                 vaov: 90
             };
 
-            // Add the new scene and load it
             addScene(`scene-${nextSceneId}`, newScene);
             loadScene(`scene-${nextSceneId}`);
             
@@ -2216,7 +2204,6 @@ const customStyles = `
     };
     
     
-    // Update the useEffect hook
     useEffect(() => {
         if (isGraphModalVisible) {
             const data = generateGraphData();
